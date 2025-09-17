@@ -1,3 +1,9 @@
+import { AuthLayout } from "./layouts/auth.layout";
+
 export default function App() {
-  return <h1>Foco</h1>;
+  return (
+    <>
+      <AuthLayout />
+    </>
+  );
 }
