@@ -20,10 +20,7 @@ export class ClientService {
       },
     });
 
-    const { password: _, ...userWithoutPassword } = data;
-
-
-    const client = responseClientSchema.parse(userWithoutPassword);
+    const client = responseClientSchema.parse(data);
 
     return client;
   }
@@ -42,8 +39,7 @@ export class ClientService {
       },
     });
 
-    const { password: _, ...userWithoutPassword } = data;
-    const client = responseClientSchema.parse(userWithoutPassword);
+    const client = responseClientSchema.parse(data);
 
     return client;
   }
