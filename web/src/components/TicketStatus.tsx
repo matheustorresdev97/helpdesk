@@ -1,8 +1,9 @@
 type Props = {
   status: "OPEN" | "PROCESSING" | "CLOSED";
+  isHidden?: boolean;
 };
 
-export function TicketStatus({ status }: Props) {
+export function TicketStatus({ status, isHidden = false }: Props) {
   if (status === "OPEN") {
     return (
       <div
@@ -24,7 +25,10 @@ export function TicketStatus({ status }: Props) {
           />
         </svg>
 
-        <span className="font-lato font-bold text-xs hidden sm:inline">
+        <span
+          className="font-lato font-bold text-xs hidden sm:inline"
+          hidden={isHidden}
+        >
           Aberto
         </span>
       </div>
@@ -52,7 +56,10 @@ export function TicketStatus({ status }: Props) {
           />
         </svg>
 
-        <span className="font-lato font-bold text-xs hidden sm:inline">
+        <span
+          className="font-lato font-bold text-xs hidden sm:inline"
+          hidden={isHidden}
+        >
           Em atendimento
         </span>
       </div>
@@ -80,7 +87,10 @@ export function TicketStatus({ status }: Props) {
           />
         </svg>
 
-        <span className="font-lato font-bold text-xs hidden sm:inline">
+        <span
+          className="font-lato font-bold text-xs hidden sm:inline"
+          hidden={isHidden}
+        >
           Encerrado
         </span>
       </div>

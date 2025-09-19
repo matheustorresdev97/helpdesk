@@ -2,15 +2,15 @@ import { Route, Routes } from "react-router";
 
 import { AppLayout } from "../layouts/app.layout";
 
-import { Ticket } from "../pages/ticket";
 import { TicketDetails } from "../pages/ticket-details";
 import { NotFound } from "../pages/not-found";
+import { TechnicianDashboard } from "../pages/technician-dashboard";
 
 export function TechnicianRoutes() {
   return (
     <Routes>
       <Route path="/" element={<AppLayout />}>
-        <Route path="/" element={<Ticket />} />
+        <Route path="/" element={<TechnicianDashboard />} />
         <Route path="/ticket" element={<TicketDetails />} />
       </Route>
 

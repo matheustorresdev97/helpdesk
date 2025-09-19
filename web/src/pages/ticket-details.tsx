@@ -7,6 +7,7 @@ import { useAuth } from "../hooks/useAuth";
 import { formatCurrency } from "../utils/format-currency";
 import { formatDate } from "../utils/format-date";
 import { getInitials } from "../utils/get-name-initials";
+import { TicketDetailsButton } from "../components/TicketDetailsButton";
 
 export function TicketDetails() {
   const navigate = useNavigate();
@@ -74,7 +75,7 @@ export function TicketDetails() {
               <Button
                 variantStyle="light"
                 variantSize="confirmWindow"
-                className="flex items-center justify-center gap-2 text-gray-200"
+                className="flex items-center justify-center gap-2 text-gray-200 !cursor-none"
               >
                 <svg
                   width="18"
@@ -99,7 +100,7 @@ export function TicketDetails() {
               <Button
                 variantStyle="light"
                 variantSize="confirmWindow"
-                className="flex items-center justify-center gap-2 text-gray-200"
+                className="flex items-center justify-center gap-2 text-gray-200 !cursor-none"
               >
                 <svg
                   width="18"
@@ -119,6 +120,10 @@ export function TicketDetails() {
               </Button>
             )}
           </div>
+        )}
+
+        {role === "TECHNICIAN" && (
+          <TicketDetailsButton status={ticket.status} />
         )}
       </div>
 
@@ -225,7 +230,7 @@ export function TicketDetails() {
                 Adicionais
               </span>
               {ticket.services.map((service) => (
-                <div className="flex place-content-between">
+                <div key={service.id} className="flex place-content-between">
                   <p className="text-gray-200 font-lato text-xs">
                     {service.title}
                   </p>
