@@ -7,6 +7,7 @@ import {
 import { getTechnicianWithLessOpenTickets } from "../util/assign-technician";
 import { normalizeTickets } from "../util/normalize-ticket";
 import { AppError } from "../util/app-error";
+import { TicketStatus } from "@prisma/client";
 
 export class TicketService {
   async create(payload: CreateTicketPayload, user: any) {
@@ -79,5 +80,16 @@ export class TicketService {
     const tickets = responseTicketArraySchema.parse(normalized);
 
     return { tickets, pagination };
+  }
+
+  async updateStatus(id: number, status: TicketStatus) {
+    const ticket = await prisma.ticket.update({
+      where: { id },
+      data: {
+        status,
+      },
+    });
+
+    return ticket;
   }
 }

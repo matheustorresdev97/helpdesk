@@ -33,6 +33,14 @@ export function TicketDetails() {
     return () => clearTimeout(timerId);
   }, [ticket]);
 
+  function handleTicketUpdateError(message: string) {
+    setError(message);
+
+    setTimeout(() => {
+      setError(null);
+    }, 5000);
+  }
+
   if (!ticket) {
     return <Loading />;
   }
@@ -123,7 +131,10 @@ export function TicketDetails() {
         )}
 
         {role === "TECHNICIAN" && (
-          <TicketDetailsButton status={ticket.status} />
+          <TicketDetailsButton
+            ticket={ticket}
+            handleError={handleTicketUpdateError}
+          />
         )}
       </div>
 
