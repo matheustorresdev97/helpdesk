@@ -17,7 +17,6 @@ export function Routes() {
       return <AuthRoutes />;
     }
 
-    console.log(session.user.role);
     switch (session?.user.role) {
       case 'ADMIN':
         return <AdminRoutes />;
