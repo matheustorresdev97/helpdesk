@@ -1,6 +1,10 @@
 import { hash } from "bcrypt";
-import z from 'zod';
-import { CreateClientPayload, responseClientSchema, UpdateClientPayload } from "../schema/client.schema";
+import z from "zod";
+import {
+  CreateClientPayload,
+  responseClientSchema,
+  UpdateClientPayload,
+} from "../schema/client.schema";
 import { prisma } from "../database/prisma";
 import { AppError } from "../util/app-error";
 
@@ -15,7 +19,7 @@ export class ClientService {
         name,
         email,
         password: hashedPassword,
-        role: 'CLIENT',
+        role: "CLIENT",
       },
     });
 
@@ -51,7 +55,7 @@ export class ClientService {
     const data = await prisma.client.findMany({
       skip,
       take: perPage,
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: "desc" },
     });
 
     const totalRecords = await prisma.client.count();
@@ -74,7 +78,7 @@ export class ClientService {
     });
 
     if (!data) {
-      throw new AppError('Cliente não localizado', 404);
+      throw new AppError("Cliente não localizado", 404);
     }
 
     const { password: _, ...userWithoutPassword } = data;

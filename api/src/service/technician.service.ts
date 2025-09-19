@@ -1,8 +1,12 @@
-import { hash } from 'bcrypt';
-import z from 'zod';
-import { prisma } from '../database/prisma';
+import { hash } from "bcrypt";
+import z from "zod";
+import { prisma } from "../database/prisma";
 
-import { CreateTechnicianPayload, responseTechnicianSchema, UpdateTechnicianPayload } from '../schema/technician.schema';
+import {
+  CreateTechnicianPayload,
+  responseTechnicianSchema,
+  UpdateTechnicianPayload,
+} from "../schema/technician.schema";
 
 export class TechnicianService {
   async create(payload: CreateTechnicianPayload) {
@@ -15,8 +19,8 @@ export class TechnicianService {
         email,
         password: hashedPassword,
         name,
-        role: 'TECHNICIAN',
-        profilePhoto: '',
+        role: "TECHNICIAN",
+        profilePhoto: "",
         availability: {
           create: availability.map((time) => ({ time })), // cria vários horários
         },
@@ -43,10 +47,12 @@ export class TechnicianService {
         name,
         email,
         ...(hashedPassword && { password: hashedPassword }),
-        profilePhoto: profilePhoto ?? '',
+        profilePhoto: profilePhoto ?? "",
         availability: {
           deleteMany: {},
-          create: availability.sort((a, b) => a.getTime() - b.getTime()).map((time) => ({ time })),
+          create: availability
+            .sort((a, b) => a.getTime() - b.getTime())
+            .map((time) => ({ time })),
         },
       },
       include: { availability: true },
@@ -69,7 +75,7 @@ export class TechnicianService {
     const data = await prisma.technician.findMany({
       skip,
       take: perPage,
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: "desc" },
       include: { availability: true },
     });
 
