@@ -3,10 +3,7 @@ import { sign } from 'jsonwebtoken';
 import { authConfig } from '../config/auth-config';
 import { prisma } from '../database/prisma';
 import { AppError } from '../util/app-error';
-import { UserDTO } from '../dtos/user.dto';
-
-
-
+import { responseUserSchema } from '../schema/user.schema';
 
 export class SessionService {
   async login(email: string, password: string) {
@@ -28,7 +25,7 @@ export class SessionService {
     });
 
     const { password: _, ...userWithoutPassword } = data;
-    const user = UserDTO.parse(userWithoutPassword);
+    const user = responseUserSchema.parse(userWithoutPassword);
 
     return { user, token };
   }

@@ -1,5 +1,7 @@
 import z from "zod";
 
+import { responseUserSchema } from "./user.schema";
+
 export const createClientSchema = z.object({
   email: z.email({ message: "Informe um email válido" }),
   password: z.string().min(6, { message: "Mínimo de 6 caracteres." }),
@@ -8,3 +10,7 @@ export const createClientSchema = z.object({
 });
 
 export type CreateClientPayload = z.infer<typeof createClientSchema>;
+
+export const responseClientSchema = responseUserSchema.extend({
+  profilePhoto: z.string(),
+});
