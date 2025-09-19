@@ -16,8 +16,7 @@ export function Technician() {
     const [totalOfPage, setTotalOfPage] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [technicians, setTechnicians] = useState<Technician[]>([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isAddTechnicians, setIsAddTechnicians] = useState(true);
+
 
     function handlePagination(action: 'next' | 'previous') {
         setPage((prevPage) => {
@@ -55,7 +54,7 @@ export function Technician() {
     }, [page]);
     return (
         <>
-            <div className="flex place-content-between mb-7">
+            <div className="flex place-content-between mb-7 items-center">
                 <h1 className="text-blue-dark font-lato font-bold text-2xl">Técnicos</h1>
                 <AdminDashboardButton onClick={() => navigate('/technicians/new')}>Novo</AdminDashboardButton>
             </div>
