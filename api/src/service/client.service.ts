@@ -12,7 +12,6 @@ export class ClientService {
 
     const data = await prisma.client.create({
       data: {
-        profilePhoto: '',
         name,
         email,
         password: hashedPassword,
@@ -32,7 +31,7 @@ export class ClientService {
     const data = await prisma.client.update({
       where: { id },
       data: {
-        profilePhoto: profilePhoto ?? '',
+        profilePhoto: profilePhoto ?? null,
         name,
         email,
         ...(hashedPassword && { password: hashedPassword }),

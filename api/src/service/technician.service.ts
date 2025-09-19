@@ -15,6 +15,7 @@ export class TechnicianService {
         password: hashedPassword,
         name,
         role: 'TECHNICIAN',
+        profilePhoto: '',
         availability: {
           create: availability.map((time) => ({ time })),
         },
