@@ -1,5 +1,5 @@
 import z from 'zod';
-import { prisma } from '../config/prisma-config';
+import { prisma } from '../database/prisma';
 import {
     CreateServicePayload,
     responseServiceSchema,

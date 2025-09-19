@@ -11,6 +11,5 @@ export const createClientSchema = z.object({
 
 export type CreateClientPayload = z.infer<typeof createClientSchema>;
 
-export const responseClientSchema = responseUserSchema.extend({
-  profilePhoto: z.string(),
-});
+export const responseClientSchema = responseUserSchema.extend({});
+
