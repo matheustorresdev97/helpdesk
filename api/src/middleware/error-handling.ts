@@ -26,5 +26,8 @@ export function errorHandling(
     return response.status(409).json({ message: "Email já está em uso" });
   }
 
+  if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+    return response.status(404).json({ message: 'Recurso não encontrado' });
+  }
   return response.status(500).json({ message: error.message });
 }
