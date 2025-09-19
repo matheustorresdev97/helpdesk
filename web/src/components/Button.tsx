@@ -14,8 +14,8 @@ export function Button({
   variantSize = "default",
   ...rest
 }: Props) {
-  // classename separados para legibilidade
-  const baseClasses = "rounded-sm cursor-pointer font-lato font-bold text-sm";
+
+  const baseClasses = 'rounded-sm cursor-pointer font-lato font-bold text-sm disabled:opacity-50';
   const variantStyleClasses =
     variantStyle === "light"
       ? "bg-gray-500 text-gray-200"
@@ -29,10 +29,10 @@ export function Button({
     <button
       type={type}
       disabled={isLoading}
-      className={`${baseClasses} ${variantStyleClasses} ${variantSizeClasses}`}
+      className={`${baseClasses} ${variantStyleClasses} ${variantSizeClasses} ${isLoading} && 'cursor-progress'`}
       {...rest}
     >
-      {children}
+      {isLoading ? 'Aguarde . . .' : children}
     </button>
   );
 }
