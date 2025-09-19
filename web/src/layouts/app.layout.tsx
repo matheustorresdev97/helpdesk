@@ -53,8 +53,9 @@ export function AppLayout() {
     }, [sidebarRef, buttonRef, profileMenuRef, profileButtonRef]);
 
     return (
-        <div className="flex flex-col md:grid md:grid-cols-[200px_1fr] w-full min-h-screen bg-gray-100 overflow-x-hidden">
-            <div className="hidden md:block">
+        <div className="flex flex-col md:flex-row w-full min-h-screen bg-gray-100 overflow-x-hidden">
+            {/* Sidebar para telas grandes (desktop) */}+{' '}
+            <div className="hidden md:block fixed h-screen w-[200px]">
                 <SidebarLayout />
             </div>
 
@@ -104,7 +105,9 @@ export function AppLayout() {
                 <SidebarMobileLayout />
             </div>
 
-            <MainLayout />
+            <div className="md:ml-[200px] flex-grow">
+                <MainLayout />
+            </div>
         </div>
     );
 }
