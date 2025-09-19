@@ -1,10 +1,13 @@
 import { Route, Routes } from "react-router";
-import { ClientDashboard } from "../pages/client-dashboard";
+import { AppLayout } from "../layouts/app.layout";
+import { Tickets } from "../pages/tickets";
 
 export function ClientRoutes() {
     return (
         <Routes>
-            <Route path="/" element={<ClientDashboard />} />
+            <Route path="/" element={<AppLayout />}>
+                <Route path="/" element={<Tickets />} />
+            </Route>
         </Routes>
     );
 }

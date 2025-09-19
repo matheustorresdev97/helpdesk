@@ -1,10 +1,14 @@
 import { Routes, Route } from "react-router";
-import { AdminDashboard } from "../pages/admin-dashboard";
+
+import { AppLayout } from "../layouts/app.layout";
+import { Tickets } from "../pages/tickets";
 
 export function AdminRoutes() {
     return (
         <Routes>
-            <Route path="/" element={<AdminDashboard />} />
+            <Route path="/" element={<AppLayout />}>
+                <Route path="/" element={<Tickets />} />
+            </Route>
         </Routes>
     );
 }

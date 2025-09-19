@@ -1,10 +1,14 @@
 import { Route, Routes } from "react-router";
-import { TechnicianDashboard } from "../pages/technician-dashboard";
+
+import { AppLayout } from "../layouts/app.layout";
+import { Tickets } from "../pages/tickets";
 
 export function TechnicianRoutes() {
     return (
         <Routes>
-            <Route path="/" element={<TechnicianDashboard />} />
+            <Route path="/" element={<AppLayout />}>
+                <Route path="/" element={<Tickets />} />
+            </Route>
         </Routes>
     );
 }
