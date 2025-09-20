@@ -55,7 +55,7 @@ export function ServiceModal({
 
       if (!isAddService && service) {
         await api.put(`/services/${service.id}`, data);
-      } else if (!isAddService && ticket) {
+      } else if (isAddService && ticket) {
         const response = await api.post("/services", data);
         const serviceId = response.data.id;
         const updatedTicket = await api.patch(
@@ -67,6 +67,7 @@ export function ServiceModal({
           onServiceAdded(updatedTicket.data);
         }
       } else {
+        // Criando um novo serviço (sem associar a ticket)
         await api.post("/services", data);
       }
 

@@ -9,6 +9,7 @@ import { formatDate } from "../utils/format-date";
 import { getInitials } from "../utils/get-name-initials";
 import { TicketDetailsButton } from "../components/TicketDetailsButton";
 import { ServiceModal } from "../components/ServiceModal";
+import { AdminDashboardButton } from "../components/AdminDashboardButton";
 
 export function TicketDetails() {
   const navigate = useNavigate();
@@ -37,11 +38,13 @@ export function TicketDetails() {
   }
 
   function handleOpenServiceModal() {
+    setIsAddService(true);
     setIsModalOpen(true);
   }
 
   function handleCloseServiceModal() {
     setIsModalOpen(false);
+    setIsAddService(false);
   }
 
   if (!ticket) {
@@ -75,12 +78,14 @@ export function TicketDetails() {
               Voltar
             </button>
           </div>
-          <h1 className="text-blue-dark font-lato font-bold text-2xl">Chamado detalhado</h1>
+          <h1 className="text-blue-dark font-lato font-bold text-2xl">
+            Chamado detalhado
+          </h1>
         </div>
 
-        {role === 'ADMIN' && (
+        {role === "ADMIN" && (
           <div className="flex gap-2">
-            {ticket?.status !== 'CLOSED' && (
+            {ticket?.status !== "CLOSED" && (
               <Button
                 variantStyle="light"
                 variantSize="confirmWindow"
@@ -105,7 +110,7 @@ export function TicketDetails() {
               </Button>
             )}
 
-            {ticket?.status === 'CLOSED' && (
+            {ticket?.status === "CLOSED" && (
               <Button
                 variantStyle="light"
                 variantSize="confirmWindow"
@@ -131,8 +136,11 @@ export function TicketDetails() {
           </div>
         )}
 
-        {role === 'TECHNICIAN' && (
-          <TicketDetailsButton ticket={ticket} handleError={handleTicketUpdateError} />
+        {role === "TECHNICIAN" && (
+          <TicketDetailsButton
+            ticket={ticket}
+            handleError={handleTicketUpdateError}
+          />
         )}
       </div>
       <div className="flex flex-col md:flex-row gap-8">
@@ -142,32 +150,52 @@ export function TicketDetails() {
             <div className="flex flex-col gap-1">
               <div className="flex items-center place-content-between">
                 <p className="text-gray-300 font-lato font-bold text-xs">
-                  {ticket.id.toString().padStart(5, '0')}
+                  {ticket.id.toString().padStart(5, "0")}
                 </p>
                 <TicketStatus status={ticket.status} />
               </div>
-              <h1 className="text-gray-200 text-base font-lato font-bold">{ticket.title}</h1>
+              <h1 className="text-gray-200 text-base font-lato font-bold">
+                {ticket.title}
+              </h1>
             </div>
             <div>
-              <span className="text-gray-400 font-lato font-bold text-xs">Descrição</span>
-              <p className="text-gray-200 font-lato text-sm">{ticket.description}</p>
+              <span className="text-gray-400 font-lato font-bold text-xs">
+                Descrição
+              </span>
+              <p className="text-gray-200 font-lato text-sm">
+                {ticket.description}
+              </p>
             </div>
             <div>
-              <span className="text-gray-400 font-lato font-bold text-xs">Categoria</span>
-              <p className="text-gray-200 font-lato text-sm">{ticket.services[0].title}</p>
+              <span className="text-gray-400 font-lato font-bold text-xs">
+                Categoria
+              </span>
+              <p className="text-gray-200 font-lato text-sm">
+                {ticket.services[0].title}
+              </p>
             </div>
             <div className="flex gap-12 md:gap-32">
               <div>
-                <span className="text-gray-400 font-lato font-bold text-xs">Criado em</span>
-                <p className="text-gray-200 font-lato text-sm">{formatDate(ticket.createdAt)}</p>
+                <span className="text-gray-400 font-lato font-bold text-xs">
+                  Criado em
+                </span>
+                <p className="text-gray-200 font-lato text-sm">
+                  {formatDate(ticket.createdAt)}
+                </p>
               </div>
               <div>
-                <span className="text-gray-400 font-lato font-bold text-xs">Atualizado em</span>
-                <p className="text-gray-200 font-lato text-sm">{formatDate(ticket.updatedAt)}</p>
+                <span className="text-gray-400 font-lato font-bold text-xs">
+                  Atualizado em
+                </span>
+                <p className="text-gray-200 font-lato text-sm">
+                  {formatDate(ticket.updatedAt)}
+                </p>
               </div>
             </div>
             <div>
-              <span className="text-gray-400 font-lato font-bold text-xs">Cliente</span>
+              <span className="text-gray-400 font-lato font-bold text-xs">
+                Cliente
+              </span>
               <div className="flex gap-2 items-center mt-2">
                 <span className="bg-blue-dark w-[20px] h-[20px] font-lato text-[9px] text-gray-600 rounded-full flex justify-center items-center">
                   {getInitials(ticket.client.name)}
@@ -178,16 +206,25 @@ export function TicketDetails() {
           </div>
 
           {/* Serviços Adicionais */}
-          {role === 'TECHNICIAN' && (
+          {role === "TECHNICIAN" && (
             <div className="border border-gray-500 p-6 rounded-lg flex flex-col gap-4 ">
               <div className="flex items-center font-lato">
-                <h1 className="mr-auto font-bold text-xs text-gray-400">Serviços adicionais</h1>
-                <AdminDashbordButton variantSize="mobile" onClick={handleOpenServiceModal} />
+                <h1 className="mr-auto font-bold text-xs text-gray-400">
+                  Serviços adicionais
+                </h1>
+                <AdminDashboardButton
+                  variantSize="mobile"
+                  onClick={handleOpenServiceModal}
+                />
               </div>
               {ticket.services.map((service) => (
                 <div key={service.id} className="flex place-content-between">
-                  <p className="text-gray-200 font-lato text-xs">{service.title}</p>
-                  <p className="text-gray-200 font-lato text-xs">{formatCurrency(service.value)}</p>
+                  <p className="text-gray-200 font-lato text-xs">
+                    {service.title}
+                  </p>
+                  <p className="text-gray-200 font-lato text-xs">
+                    {formatCurrency(service.value)}
+                  </p>
                 </div>
               ))}
             </div>
@@ -209,25 +246,35 @@ export function TicketDetails() {
                 {getInitials(ticket.technician.name)}
               </span>
               <div className="flex flex-col">
-                <span className="text-gray-200 font-lato text-sm">{ticket.technician.name}</span>
+                <span className="text-gray-200 font-lato text-sm">
+                  {ticket.technician.name}
+                </span>
                 <span className="text-gray-400 font-lato font-bold text-xs">
                   {ticket.technician.email}
                 </span>
               </div>
             </div>
             <div className="mb-4">
-              <span className="text-gray-400 font-lato font-bold text-xs">Valores</span>
+              <span className="text-gray-400 font-lato font-bold text-xs">
+                Valores
+              </span>
               <div className="text-gray-200 font-lato text-xs flex place-content-between">
                 <span>Preço base</span>
                 <span>{formatCurrency(ticket.initialCost)}</span>
               </div>
             </div>
             <div className="mb-4">
-              <span className="text-gray-400 font-lato font-bold text-xs">Adicionais</span>
+              <span className="text-gray-400 font-lato font-bold text-xs">
+                Adicionais
+              </span>
               {ticket.services.map((service) => (
                 <div key={service.id} className="flex place-content-between">
-                  <p className="text-gray-200 font-lato text-xs">{service.title}</p>
-                  <p className="text-gray-200 font-lato text-xs">{formatCurrency(service.value)}</p>
+                  <p className="text-gray-200 font-lato text-xs">
+                    {service.title}
+                  </p>
+                  <p className="text-gray-200 font-lato text-xs">
+                    {formatCurrency(service.value)}
+                  </p>
                 </div>
               ))}
             </div>
@@ -239,8 +286,8 @@ export function TicketDetails() {
                     {formatCurrency(
                       ticket.services.reduce(
                         (acc, s) => acc + Number(s.value),
-                        Number(ticket.initialCost),
-                      ),
+                        Number(ticket.initialCost)
+                      )
                     )}
                   </span>
                 </div>
@@ -248,7 +295,11 @@ export function TicketDetails() {
             </div>
           </div>
 
-          {error && <p className="text-feedback-danger mt-4 font-lato text-sm">{error}</p>}
+          {error && (
+            <p className="text-feedback-danger mt-4 font-lato text-sm">
+              {error}
+            </p>
+          )}
         </div>
       </div>
       <ServiceModal

@@ -6,7 +6,7 @@ import { Input } from "../components/Input";
 import { api } from "../services/api";
 import { useNavigate } from "react-router";
 
-export const createTicketSchema = z.object({
+const createTicketSchema = z.object({
   title: z.string().min(3, "Título deve ter pelo menos 3 caracteres"),
   description: z.string().min(5, "Descrição deve ter pelo menos 5 caracteres"),
   services: z
@@ -37,7 +37,7 @@ export function CreateTicket() {
         setIsLoading(false);
         setError("");
       } catch (error) {
-        setError("Não foi possível carregar os serviços");
+        setError(`Não foi possível carregar os serviços, ${error}`);
       }
     }
 
@@ -58,7 +58,7 @@ export function CreateTicket() {
     const data = {
       title,
       description,
-      services: [selectedService?.id],
+      services: selectedServiceId ? [selectedServiceId] : [],
     };
 
     try {
