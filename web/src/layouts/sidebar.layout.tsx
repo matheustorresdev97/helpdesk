@@ -1,14 +1,23 @@
-import { useEffect, useRef, useState } from "react";
-import { NavLink } from "react-router";
-import LogoIconSvg from "../assets/img/Logo_IconLight.svg";
-import { useAuth } from "../hooks/useAuth";
-import { getInitials } from "../utils/get-name-initials";
-import { translateRole } from "../utils/translate-role";
-import { ProfileMenu } from "../components/ProfileMenu";
+import { useEffect, useRef, useState } from 'react';
+import { NavLink } from 'react-router';
+import LogoIconSvg from '../assets/img/Logo_IconLight.svg';
+import { useAuth } from '../hooks/useAuth';
+import { getInitials } from '../utils/get-name-initials';
+import { translateRole } from '../utils/translate-role';
+import { ProfileMenu } from '../components/ProfileMenu';
 
-export function SidebarLayout() {
+
+type Props = {
+  onOpenProfileModal: () => void;
+};
+
+export function SidebarLayout({ onOpenProfileModal }: Props) {
   const { session } = useAuth();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  const openProfileModal = () => setIsProfileModalOpen(true);
+  const closeProfileModal = () => setIsProfileModalOpen(false);
 
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const profileButtonRef = useRef<HTMLDivElement>(null);
@@ -28,9 +37,9 @@ export function SidebarLayout() {
         setIsProfileMenuOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [profileMenuRef, profileButtonRef]);
 
@@ -41,9 +50,7 @@ export function SidebarLayout() {
           <div className="flex gap-3 px-5 py-7 border-b-1 border-gray-200">
             <img src={LogoIconSvg} alt="logo" className="w-[44px] h-[44px] " />
             <div className="mb-6">
-              <h1 className="text-gray-600 font-lato text-xl text-bold">
-                HelpDesk
-              </h1>
+              <h1 className="text-gray-600 font-lato text-xl text-bold">HelpDesk</h1>
               <p className="text-blue-light font-lato uppercase font-bold text-xs">
                 {translateRole(session?.user.role)}
               </p>
@@ -51,13 +58,12 @@ export function SidebarLayout() {
           </div>
         </header>
         <nav className="flex flex-col items-center mt-6 gap-1 flex-grow">
-          {/* TICKETS */}
           <NavLink
             to="/"
             className={({ isActive }) =>
               `flex items-center gap-[12px] min-w-[156px] h-[44px] text-gray-400 cursor-pointer
             hover:bg-blue-dark hover:rounded-sm hover:text-gray-600
-              ${isActive ? "bg-blue-dark text-gray-600 rounded-sm" : ""}`
+              ${isActive ? 'bg-blue-dark text-gray-600 rounded-sm' : ''}`
             }
           >
             <svg
@@ -73,17 +79,17 @@ export function SidebarLayout() {
               />
             </svg>
             <span className="text-sm font-lato">
-              {session?.user.role === "ADMIN" ? "Chamados" : "Meus Chamados"}
+              {session?.user.role === 'ADMIN' ? 'Chamados' : 'Meus Chamados'}
             </span>
           </NavLink>
 
-          {session?.user.role === "CLIENT" && (
+          {session?.user.role === 'CLIENT' && (
             <NavLink
-              to={"/ticket/new"}
+              to={'/ticket/new'}
               className={({ isActive }) =>
                 `flex items-center gap-[12px] min-w-[156px] h-[44px] text-gray-400 cursor-pointer
               hover:bg-blue-dark hover:rounded-sm hover:text-gray-600
-                ${isActive ? "bg-blue-dark text-gray-600 rounded-sm" : ""}`
+                ${isActive ? 'bg-blue-dark text-gray-600 rounded-sm' : ''}`
               }
             >
               <svg
@@ -102,13 +108,13 @@ export function SidebarLayout() {
             </NavLink>
           )}
 
-          {session?.user.role === "ADMIN" && (
+          {session?.user.role === 'ADMIN' && (
             <NavLink
               to="/technicians"
               className={({ isActive }) =>
                 `flex items-center gap-[12px] min-w-[156px] h-[44px] text-gray-400 cursor-pointer
               hover:bg-blue-dark hover:rounded-sm hover:text-gray-600
-                ${isActive ? "bg-blue-dark text-gray-600 rounded-sm" : ""}`
+                ${isActive ? 'bg-blue-dark text-gray-600 rounded-sm' : ''}`
               }
             >
               <svg
@@ -127,13 +133,13 @@ export function SidebarLayout() {
             </NavLink>
           )}
 
-          {session?.user.role === "ADMIN" && (
+          {session?.user.role === 'ADMIN' && (
             <NavLink
               to="/clients"
               className={({ isActive }) =>
                 `flex items-center gap-[12px] min-w-[156px] h-[44px] text-gray-400 cursor-pointer
               hover:bg-blue-dark hover:rounded-sm hover:text-gray-600
-                ${isActive ? "bg-blue-dark text-gray-600 rounded-sm" : ""}`
+                ${isActive ? 'bg-blue-dark text-gray-600 rounded-sm' : ''}`
               }
             >
               <svg
@@ -150,13 +156,13 @@ export function SidebarLayout() {
             </NavLink>
           )}
 
-          {session?.user.role === "ADMIN" && (
+          {session?.user.role === 'ADMIN' && (
             <NavLink
               to="/services"
               className={({ isActive }) =>
                 `flex items-center gap-[12px] min-w-[156px] h-[44px] text-gray-400 cursor-pointer
               hover:bg-blue-dark hover:rounded-sm hover:text-gray-600
-                ${isActive ? "bg-blue-dark text-gray-600 rounded-sm" : ""}`
+                ${isActive ? 'bg-blue-dark text-gray-600 rounded-sm' : ''}`
               }
             >
               <svg
@@ -187,12 +193,8 @@ export function SidebarLayout() {
             {getInitials(session?.user.name)}
           </div>
           <div>
-            <h1 className="text-gray-600 font-lato text-sm">
-              {session?.user.name}
-            </h1>
-            <p className="text-gray-400 font-lato text-xs">
-              {session?.user.email}
-            </p>
+            <h1 className="text-gray-600 font-lato text-sm">{session?.user.name}</h1>
+            <p className="text-gray-400 font-lato text-xs">{session?.user.email}</p>
           </div>
 
           {isProfileMenuOpen && (
@@ -200,6 +202,7 @@ export function SidebarLayout() {
               <ProfileMenu
                 isOpen={isProfileMenuOpen}
                 onClose={toggleProfileMenu}
+                onOpenModal={onOpenProfileModal}
               />
             </div>
           )}
