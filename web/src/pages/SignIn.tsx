@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import { useActionState } from "react";
+import { useNavigate } from "react-router";
 import z, { ZodError } from "zod";
 import circleAlertSvg from "../assets/icons/circle-alert.svg";
 import { Button } from "../components/Button";
@@ -15,6 +16,7 @@ const signInSchema = z.object({
 export function SignIn() {
   const [state, formAction, isLoading] = useActionState(signIn, null);
   const auth = useAuth();
+  const navigate = useNavigate();
 
   async function signIn(_: any, formData: FormData) {
     try {
@@ -26,8 +28,6 @@ export function SignIn() {
       const response = await api.post("/sessions", data);
 
       auth.save(response.data);
-
-      console.log(auth.session?.user.role);
     } catch (error) {
       if (error instanceof ZodError) {
         return { message: error.issues[0].message };
@@ -59,7 +59,7 @@ export function SignIn() {
           </p>
         </div>
 
-        <form action={formAction} className="flex flex-col gap-[1rem]">
+        <form action={formAction} className="flex flex-col gap-4">
           <Input
             name="email"
             required
@@ -96,7 +96,7 @@ export function SignIn() {
 
       <div
         className="
-          w-full max-w-md md:w-[400px] p-6 mt-4 md:mt-8
+          md:w-[400px] p-6 mt-4 md:mt-8
           rounded-lg border border-gray-500
           flex flex-col gap-[24px]
         "
@@ -109,7 +109,9 @@ export function SignIn() {
             Cadastre agora mesmo
           </p>
         </div>
-        <Button variantStyle="light">Criar Conta</Button>
+        <Button variantStyle="light" onClick={() => navigate("/signup")}>
+          Criar Conta
+        </Button>
       </div>
     </>
   );

@@ -15,7 +15,7 @@ export function Button({
   ...rest
 }: Props) {
   const baseClasses =
-    "rounded-sm cursor-pointer font-lato font-bold text-sm disabled:opacity-50";
+    "mt-6 rounded-sm cursor-pointer font-lato font-bold text-sm disabled:opacity-50";
   const variantStyleClasses =
     variantStyle === "light"
       ? "bg-gray-500 text-gray-200"
