@@ -1,39 +1,36 @@
 import { hash } from "bcrypt";
-import {
-  CreateTechnicianPayload,
-  TechnicianDTO,
-} from "../schemas/technician.schema";
+import { ClientDTO, CreateClientPayload } from "../schemas/client.schema";
 import { prisma } from "../config/prisma.config";
 
-export class TechnicianService {
-  async create(payload: CreateTechnicianPayload) {
+export class ClientService {
+  async create(payload: CreateClientPayload) {
     const { email, password, name, profilePhoto } = payload;
 
     const hashedPassword = await hash(password, 8);
 
-    const data = await prisma.technician.create({
+    const data = await prisma.client.create({
       data: {
         profilePhoto: profilePhoto ?? "",
         user: {
           create: {
+            name,
             email,
             password: hashedPassword,
-            name,
-            role: "TECHNICIAN",
+            role: "CLIENT",
           },
         },
       },
       include: { user: true },
     });
 
-    const technicianData = {
+    const clientData = {
       ...data.user,
       profilePhoto: data.profilePhoto,
     };
 
-    const { password: _, ...userWithoutPassword } = technicianData;
-    const technician = TechnicianDTO.parse(userWithoutPassword);
+    const { password: _, ...userWithoutPassword } = clientData;
+    const client = ClientDTO.parse(userWithoutPassword);
 
-    return technician;
+    return client;
   }
 }
