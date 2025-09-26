@@ -1,7 +1,9 @@
+import { AuthLayout } from "./layouts/auth.layout";
+
 export default function App() {
   return (
     <>
-      <h1 className="font-lato text-2xl font-bold">Hello WOrld</h1>
+      <AuthLayout />
     </>
   );
 }
