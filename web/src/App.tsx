@@ -1,9 +1,10 @@
-import { AuthLayout } from "./layouts/auth.layout";
+import { AuthProvider } from "./contexts/auth.context";
+import { Routes } from "./routes";
 
 export default function App() {
   return (
-    <>
-      <AuthLayout />
-    </>
+    <AuthProvider>
+      <Routes />
+    </AuthProvider>
   );
 }
