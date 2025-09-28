@@ -1,11 +1,38 @@
+import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router";
 import LogoIconSvg from "../assets/img/Logo_IconLight.svg";
 import { useAuth } from "../hooks/useAuth";
 import { getInitials } from "../utils/get-name-initials";
 import { translateRole } from "../utils/translate-role";
+import { ProfileMenu } from "../components/ProfileMenu";
 
 export function SidebarLayout() {
   const { session } = useAuth();
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+  const profileButtonRef = useRef<HTMLDivElement>(null);
+
+  const toggleProfileMenu = () => {
+    setIsProfileMenuOpen(!isProfileMenuOpen);
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target as Node) &&
+        profileButtonRef.current &&
+        !profileButtonRef.current.contains(event.target as Node)
+      ) {
+        setIsProfileMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [profileMenuRef, profileButtonRef]);
 
   return (
     <>
@@ -24,7 +51,6 @@ export function SidebarLayout() {
           </div>
         </header>
         <nav className="flex flex-col items-center mt-6 gap-1 flex-grow">
-          {/* TICKETS */}
           <NavLink
             to="/"
             className={({ isActive }) =>
@@ -152,7 +178,11 @@ export function SidebarLayout() {
             </NavLink>
           )}
         </nav>
-        <footer className="border-t-1 border-gray-200 flex gap-3 mt-auto p-5">
+        <footer
+          className="border-t-1 border-gray-200 flex gap-3 mt-auto p-5 cursor-pointer"
+          ref={profileButtonRef}
+          onClick={toggleProfileMenu}
+        >
           <div
             className="bg-blue-dark w-[32px] h-[32px] text-gray-600  
             rounded-2xl flex items-center justify-center"
@@ -167,6 +197,15 @@ export function SidebarLayout() {
               {session?.user.email}
             </p>
           </div>
+
+          {isProfileMenuOpen && (
+            <div ref={profileMenuRef} className="absolute bottom-[60px]">
+              <ProfileMenu
+                isOpen={isProfileMenuOpen}
+                onClose={toggleProfileMenu}
+              />
+            </div>
+          )}
         </footer>
       </aside>
     </>
