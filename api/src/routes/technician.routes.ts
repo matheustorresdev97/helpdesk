@@ -9,6 +9,7 @@ const technicianController = new TechnicianController();
 
 technicianRoutes.use(ensureAuthenticated);
 
+technicianRoutes.get("/", technicianController.index);
 technicianRoutes.post("/", technicianController.create);
 technicianRoutes.use(verifyAuthorization(["ADMIN"]));
 
