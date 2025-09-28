@@ -4,10 +4,15 @@ import { AdminRoutes } from "./admin.routes";
 import { ClientRoutes } from "./client.routes";
 import { TechnicianRoutes } from "./technician.routes";
 import { AuthRoutes } from "./auth.routes";
+import { Loading } from "../components/Loading";
 
 export function Routes() {
+  const { session, isLoading } = useAuth();
+
   function Route() {
-    const { session } = useAuth();
+    if (!session) {
+      return <AuthRoutes />;
+    }
 
     switch (session?.user.role) {
       case "ADMIN":
@@ -19,6 +24,10 @@ export function Routes() {
       default:
         return <AuthRoutes />;
     }
+  }
+
+  if (isLoading) {
+    return <Loading />;
   }
 
   return (
