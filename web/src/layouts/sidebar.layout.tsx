@@ -5,11 +5,11 @@ import { getInitials } from "../utils/get-name-initials";
 import { translateRole } from "../utils/translate-role";
 
 export function SidebarLayout() {
-  const { session, remove } = useAuth();
+  const { session } = useAuth();
 
   return (
     <>
-      <aside className="flex flex-col">
+      <aside className="flex flex-col h-screen">
         <header>
           <div className="flex gap-3 px-5 py-7 border-b-1 border-gray-200">
             <img src={LogoIconSvg} alt="logo" className="w-[44px] h-[44px] " />
@@ -23,7 +23,7 @@ export function SidebarLayout() {
             </div>
           </div>
         </header>
-        <nav className="flex flex-col items-center justify-center mt-6 gap-1 ">
+        <nav className="flex flex-col items-center mt-6 gap-1 flex-grow">
           {/* TICKETS */}
           <NavLink
             to="/"

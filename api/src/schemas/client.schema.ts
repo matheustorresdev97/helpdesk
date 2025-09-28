@@ -1,5 +1,5 @@
-import z from "zod";
-import { UserDTO } from "./user.schema";
+import z from 'zod';
+import { responseUserSchema } from './user.schema';
 
 export const createClientSchema = z.object({
   email: z.email({ message: 'Informe um email válido' }),
@@ -8,12 +8,8 @@ export const createClientSchema = z.object({
   profilePhoto: z.string().optional(),
 });
 
-
-export const ClientDTO = UserDTO.extend({
-  profilePhoto: z.string(),
-});
-
 export type CreateClientPayload = z.infer<typeof createClientSchema>;
 
-
-export type ClientDTOSchema = z.infer<typeof ClientDTO>;
+export const responseClientSchema = responseUserSchema.extend({
+  profilePhoto: z.string(),
+});
