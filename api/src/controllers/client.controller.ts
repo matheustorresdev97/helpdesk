@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { createClientSchema, updateClientSchema } from "../schemas/client.schema";
+import {
+  createClientSchema,
+  updateClientSchema,
+} from "../schemas/client.schema";
 import { ClientService } from "../services/client.service";
 import { paginationSchema } from "../schemas/pagination.schema";
 
@@ -33,5 +36,12 @@ export class ClientController {
     const client = await clientService.show(id);
 
     return response.json(client);
+  }
+
+  async delete(request: Request, response: Response) {
+    const { id } = request.params;
+    await clientService.delete(id);
+
+    return response.sendStatus(204);
   }
 }

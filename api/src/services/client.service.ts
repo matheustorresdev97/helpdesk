@@ -1,5 +1,5 @@
 import { hash } from "bcrypt";
-import z from 'zod';
+import z from "zod";
 import {
   CreateClientPayload,
   responseClientSchema,
@@ -24,9 +24,7 @@ export class ClientService {
       },
     });
 
-    const { password: _, ...userWithoutPassword } = data;
-
-    const client = responseClientSchema.parse(userWithoutPassword);
+    const client = responseClientSchema.parse(data);
 
     return client;
   }
@@ -38,15 +36,14 @@ export class ClientService {
     const data = await prisma.client.update({
       where: { id },
       data: {
-        profilePhoto: profilePhoto ?? '',
+        profilePhoto: profilePhoto ?? "",
         name,
         email,
         ...(hashedPassword && { password: hashedPassword }),
       },
     });
 
-    const { password: _, ...userWithoutPassword } = data;
-    const client = responseClientSchema.parse(userWithoutPassword);
+    const client = responseClientSchema.parse(data);
 
     return client;
   }
@@ -59,7 +56,7 @@ export class ClientService {
     const data = await prisma.client.findMany({
       skip,
       take: perPage,
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: "asc" },
     });
 
     const totalRecords = await prisma.client.count();
@@ -82,11 +79,17 @@ export class ClientService {
     });
 
     if (!data) {
-      throw new AppError('Cliente não localizado', 404);
+      throw new AppError("Cliente não localizado", 404);
     }
 
-    const { password: _, ...userWithoutPassword } = data;
+    const client = responseClientSchema.parse(data);
 
-    return userWithoutPassword;
+    return client;
+  }
+
+  async delete(id: string) {
+    const data = await prisma.client.delete({
+      where: { id },
+    });
   }
 }

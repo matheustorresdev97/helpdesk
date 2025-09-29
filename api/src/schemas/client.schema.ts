@@ -10,9 +10,12 @@ export const createClientSchema = z.object({
 export type CreateClientPayload = z.infer<typeof createClientSchema>;
 
 export const updateClientSchema = z.object({
-  email: z.email({ message: 'Informe um email válido' }),
-  password: z.string().min(6, { message: 'Mínimo de 6 caracteres.' }).optional(),
-  name: z.string().min(2, { message: 'Informe um nome válido.' }),
+  email: z.email({ message: "Informe um email válido" }),
+  password: z
+    .string()
+    .min(6, { message: "Mínimo de 6 caracteres." })
+    .optional(),
+  name: z.string().min(2, { message: "Informe um nome válido." }),
   profilePhoto: z.string().optional(),
 });
 
@@ -23,4 +26,5 @@ export const responseClientSchema = z.object({
   email: z.email(),
   name: z.string(),
   role: z.string(),
+  profilePhoto: z.string().optional(),
 });
