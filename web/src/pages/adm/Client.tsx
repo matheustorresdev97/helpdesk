@@ -4,6 +4,7 @@ import { ClientModal } from "../../components/ClientModal";
 import { Pagination } from "../../components/Pagination";
 import { api } from "../../services/api";
 import { getInitials } from "../../utils/get-name-initials";
+import { ConfirmationModal } from "../../components/ConfirmationModal";
 
 const PER_PAGE = 8;
 
@@ -14,6 +15,8 @@ export function Client() {
   const [clients, setClients] = useState<Client[]>([]);
   const [editClient, setEditClient] = useState<Client | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
 
   function handleEditClientModal(client: Client) {
     setEditClient(client);
@@ -37,10 +40,6 @@ export function Client() {
     });
   }
 
-  async function handleDeleteClient(id: string) {
-    alert("DELETAR : " + id);
-  }
-
   async function fetchClients() {
     try {
       const { data } = await api.get<ClientAPIResponse>("/clients", {
@@ -56,6 +55,26 @@ export function Client() {
       if (error instanceof AxiosError) {
         setError(error.response?.data.message || "Erro ao carregar clientes.");
       }
+    }
+  }
+
+  function handleOpenConfirmationModal(client: Client) {
+    setClientToDelete(client);
+    setIsConfirmationModalOpen(true);
+  }
+
+  function handleCloseConfirmationModal() {
+    setClientToDelete(null);
+    setIsConfirmationModalOpen(false);
+  }
+
+  async function handleDeleteClient(id: string) {
+    try {
+      await api.delete(`/clients/${id}`);
+      fetchClients();
+      handleCloseConfirmationModal();
+    } catch (error) {
+      setError("Erro ao deletar cliente");
     }
   }
 
@@ -109,7 +128,7 @@ export function Client() {
                 <td className="p-2 sm:p-4">
                   <div className="flex justify-end gap-2">
                     <button
-                      onClick={() => handleDeleteClient(client.id)}
+                      onClick={() => handleOpenConfirmationModal(client)}
                       className="bg-gray-500 p-2 sm:p-3 rounded-md cursor-pointer hover:text-gray-600 hover:bg-red-200"
                     >
                       <svg
@@ -164,6 +183,23 @@ export function Client() {
         onClose={handleCloseServiceModal}
         client={editClient}
       />
+
+      {clientToDelete && (
+        <ConfirmationModal
+          isOpen={isConfirmationModalOpen}
+          onClose={handleCloseConfirmationModal}
+          onConfirm={() => handleDeleteClient(clientToDelete.id)}
+          message={
+            <>
+              <p>
+                Tem certeza que deseja excluir o cliente:{" "}
+                <b>{clientToDelete?.name}</b>?
+              </p>
+              <p>Esta ação não pode ser desfeita.</p>
+            </>
+          }
+        />
+      )}
     </>
   );
 }
