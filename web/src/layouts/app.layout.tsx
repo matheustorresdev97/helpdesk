@@ -55,8 +55,8 @@ export function AppLayout() {
   }, [sidebarRef, buttonRef, profileMenuRef, profileButtonRef]);
 
   return (
-    <div className="flex flex-col md:grid md:grid-cols-[200px_1fr] w-full min-h-screen bg-gray-100 overflow-x-hidden">
-      <div className="hidden md:block">
+    <div className="flex flex-col md:flex-row w-full min-h-screen bg-gray-100 overflow-x-hidden">
+      <div className="hidden md:block fixed h-screen w-[200px]">
         <SidebarLayout />
       </div>
 
@@ -108,14 +108,15 @@ export function AppLayout() {
 
       <div
         ref={sidebarRef}
-        className={`fixed left-0 w-[220px] h-[280px] z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed left-0 w-[220px] h-[280px] z-50 transform transition-transform duration-300 ease-in-out md:hidden ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
         style={{ top: "64px" }}
       >
         <SidebarMobileLayout />
       </div>
-      <MainLayout />
+      <div className="md:ml-[200px] flex-grow">
+        <MainLayout />
+      </div>
     </div>
   );
 }
