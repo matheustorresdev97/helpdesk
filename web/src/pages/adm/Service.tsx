@@ -1,58 +1,99 @@
-import { AxiosError } from "axios";
-import { useEffect, useState } from "react";
-import { AdminDashboardButton } from "../../components/AdminDashboardButton";
-import { ServiceButton } from "../../components/ServiceButton";
-import { ServiceStatus } from "../../components/ServiceStatus";
-import { api } from "../../services/api";
-import { ServiceModal } from "../../components/ServiceModal";
+import { AxiosError } from 'axios';
+import { useEffect, useState } from 'react';
+import { AdminDashboardButton } from '../../components/AdminDashboardButton';
+import { Pagination } from '../../components/Pagination';
+import { ServiceButton } from '../../components/ServiceButton';
+import { ServiceModal } from '../../components/ServiceModal';
+import { ServiceStatus } from '../../components/ServiceStatus';
+import { api } from '../../services/api';
+
+const PER_PAGE = 8;
 
 export function Service() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [services, setServices] = useState<ServiceAPIResponse[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalOfPage, setTotalOfPage] = useState(0);
+  const [isAddService, setIsAddService] = useState(true);
+  const [updatedService, setUpdatedService] = useState<Service | undefined>(undefined);
 
-  function handleServiceButtonClick() {
-    console.log("oi");
+  async function handleToggleServiceStatus(id: string, currentStatus: 'ACTIVE' | 'INACTIVE') {
+    const originalServices = [...services];
+    const updatedStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+
+    try {
+      await api.put(`/services/${id}`, { status: updatedStatus });
+
+      setError(null);
+      fetchServices();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        setServices(originalServices);
+        setError(error.response?.data.message || 'Erro ao atualizar o status.');
+      }
+    }
   }
 
   function handleOpenServiceModal() {
+    setIsAddService(true);
     setIsModalOpen(true);
   }
 
   function handleCloseServiceModal() {
     setIsModalOpen(false);
+    fetchServices();
+  }
+
+  function handleEditServiceModal(editService: Service) {
+    setUpdatedService(editService);
+    setIsAddService(false);
+    setIsModalOpen(true);
   }
 
   async function fetchServices() {
     try {
-      const { data } = await api.get<ServiceAPIResponse[]>("/services");
+      const { data } = await api.get<ServiceAPIResponse>('/services', {
+        params: {
+          page,
+          perPage: PER_PAGE,
+        },
+      });
 
-      setServices(data);
+      setTotalOfPage(data.pagination.totalPages);
+      setServices(data.services);
+      setError(null);
     } catch (error) {
       if (error instanceof AxiosError) {
-        setError(error.response?.data.message || "Erro ao carregar serviços.");
+        setError(error.response?.data.message || 'Erro ao carregar serviços.');
       }
     }
   }
 
+  function handlePagination(action: 'next' | 'previous') {
+    setPage((prevPage) => {
+      if (action === 'next' && prevPage < totalOfPage) {
+        return prevPage + 1;
+      }
+      if (action === 'previous' && prevPage > 1) {
+        return prevPage - 1;
+      }
+      return prevPage;
+    });
+  }
+
   useEffect(() => {
     fetchServices();
-  }, [services]);
+  }, [page]);
 
   return (
     <>
       <div className="flex place-content-between mb-7">
-        <h1 className="text-blue-dark font-lato font-bold text-2xl ">
-          Serviços
-        </h1>
-        <AdminDashboardButton onClick={handleOpenServiceModal}>
-          Novo
-        </AdminDashboardButton>
+        <h1 className="text-blue-dark font-lato font-bold text-2xl ">Serviços</h1>
+        <AdminDashboardButton onClick={handleOpenServiceModal}>Novo</AdminDashboardButton>
       </div>
 
-      {error && (
-        <p className="text-feedback-danger mb-3 font-lato text-sm">{error}</p>
-      )}
+      {error && <p className="text-feedback-danger mb-3 font-lato text-sm">{error}</p>}
 
       <div className="border border-gray-500 rounded-lg overflow-hidden">
         <table className="w-full table-auto">
@@ -63,9 +104,7 @@ export function Service() {
             <tr>
               <th className="p-2 sm:p-4 text-sm">Titulo</th>
               <th className="p-2 sm:p-4 text-sm">Valor</th>
-              <th className="p-2 sm:p-4 text-sm md:flex md:justify-end md:mr-7">
-                Status
-              </th>
+              <th className="p-2 sm:p-4 text-sm md:flex md:justify-end md:mr-7">Status</th>
             </tr>
           </thead>
           <tbody className="border border-gray-500 font-lato">
@@ -75,7 +114,7 @@ export function Service() {
                   {service.title}
                 </td>
                 <td className="p-2 sm:p-4 text-xs sm:text-base">
-                  R$ {service.value.toFixed(2).replace(".", ",")}
+                  R$ {service.value.toFixed(2).replace('.', ',')}
                 </td>
                 <td className="p-2 sm:p-4 text-xs sm:text-base flex justify-end">
                   <ServiceStatus status={service.status} />
@@ -84,9 +123,12 @@ export function Service() {
                   <div className="flex justify-end gap-2">
                     <ServiceButton
                       status={service.status}
-                      onClick={handleServiceButtonClick}
+                      onClick={() => handleToggleServiceStatus(service.id, service.status)}
                     />
-                    <button className="bg-gray-500 p-2 sm:p-3 rounded-md cursor-pointer hover:text-gray-600 hover:bg-blue-dark">
+                    <button
+                      onClick={() => handleEditServiceModal(service)}
+                      className="bg-gray-500 p-2 sm:p-3 rounded-md cursor-pointer hover:text-gray-600 hover:bg-blue-dark"
+                    >
                       <svg
                         width="16"
                         height="16"
@@ -109,7 +151,18 @@ export function Service() {
           </tbody>
         </table>
       </div>
-      <ServiceModal isOpen={isModalOpen} onClose={handleCloseServiceModal} />
+      <Pagination
+        current={page}
+        total={totalOfPage}
+        onNext={() => handlePagination('next')}
+        onPrevious={() => handlePagination('previous')}
+      />
+      <ServiceModal
+        isOpen={isModalOpen}
+        onClose={handleCloseServiceModal}
+        isAddService={isAddService}
+        service={updatedService}
+      />
     </>
   );
 }

@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import {
   createServiceSchema,
   updateServiceSchema,
-} from "../schema/service.schema";
-import { ServiceService } from "../service/service.service";
+} from "../schemas/service.schema";
+import { ServiceService } from "../services/service.service";
+import { paginationSchema } from "../schemas/pagination.schema";
 
 const serviceService = new ServiceService();
 
@@ -24,7 +25,8 @@ export class ServiceController {
   }
 
   async index(request: Request, response: Response) {
-    const services = await serviceService.index();
+    const { page, perPage } = paginationSchema.parse(request.query);
+    const services = await serviceService.index(page, perPage);
 
     return response.json(services);
   }
