@@ -1,11 +1,11 @@
-import { AxiosError } from 'axios';
-import { useEffect, useState } from 'react';
-import { AdminDashboardButton } from '../../components/AdminDashboardButton';
-import { Pagination } from '../../components/Pagination';
-import { ServiceButton } from '../../components/ServiceButton';
-import { ServiceModal } from '../../components/ServiceModal';
-import { ServiceStatus } from '../../components/ServiceStatus';
-import { api } from '../../services/api';
+import { AxiosError } from "axios";
+import { useEffect, useState } from "react";
+import { AdminDashboardButton } from "../../components/AdminDashboardButton";
+import { Pagination } from "../../components/Pagination";
+import { ServiceButton } from "../../components/ServiceButton";
+import { ServiceModal } from "../../components/ServiceModal";
+import { ServiceStatus } from "../../components/ServiceStatus";
+import { api } from "../../services/api";
 
 const PER_PAGE = 8;
 
@@ -16,11 +16,16 @@ export function Service() {
   const [page, setPage] = useState(1);
   const [totalOfPage, setTotalOfPage] = useState(0);
   const [isAddService, setIsAddService] = useState(true);
-  const [updatedService, setUpdatedService] = useState<Service | undefined>(undefined);
+  const [updatedService, setUpdatedService] = useState<Service | undefined>(
+    undefined
+  );
 
-  async function handleToggleServiceStatus(id: string, currentStatus: 'ACTIVE' | 'INACTIVE') {
+  async function handleToggleServiceStatus(
+    id: string,
+    currentStatus: "ACTIVE" | "INACTIVE"
+  ) {
     const originalServices = [...services];
-    const updatedStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+    const updatedStatus = currentStatus === "ACTIVE" ? "INACTIVE" : "ACTIVE";
 
     try {
       await api.put(`/services/${id}`, { status: updatedStatus });
@@ -30,7 +35,7 @@ export function Service() {
     } catch (error) {
       if (error instanceof AxiosError) {
         setServices(originalServices);
-        setError(error.response?.data.message || 'Erro ao atualizar o status.');
+        setError(error.response?.data.message || "Erro ao atualizar o status.");
       }
     }
   }
@@ -53,7 +58,7 @@ export function Service() {
 
   async function fetchServices() {
     try {
-      const { data } = await api.get<ServiceAPIResponse>('/services', {
+      const { data } = await api.get<ServiceAPIResponse>("/services", {
         params: {
           page,
           perPage: PER_PAGE,
@@ -65,17 +70,17 @@ export function Service() {
       setError(null);
     } catch (error) {
       if (error instanceof AxiosError) {
-        setError(error.response?.data.message || 'Erro ao carregar serviços.');
+        setError(error.response?.data.message || "Erro ao carregar serviços.");
       }
     }
   }
 
-  function handlePagination(action: 'next' | 'previous') {
+  function handlePagination(action: "next" | "previous") {
     setPage((prevPage) => {
-      if (action === 'next' && prevPage < totalOfPage) {
+      if (action === "next" && prevPage < totalOfPage) {
         return prevPage + 1;
       }
-      if (action === 'previous' && prevPage > 1) {
+      if (action === "previous" && prevPage > 1) {
         return prevPage - 1;
       }
       return prevPage;
@@ -88,13 +93,18 @@ export function Service() {
 
   return (
     <>
-      <div className="flex place-content-between mb-7">
-        <h1 className="text-blue-dark font-lato font-bold text-2xl ">Serviços</h1>
-        <AdminDashboardButton onClick={handleOpenServiceModal}>Novo</AdminDashboardButton>
+      <div className="flex place-content-between mb-7 items-center">
+        <h1 className="text-blue-dark font-lato font-bold text-2xl ">
+          Serviços
+        </h1>
+        <AdminDashboardButton onClick={handleOpenServiceModal}>
+          Novo
+        </AdminDashboardButton>
       </div>
 
-      {error && <p className="text-feedback-danger mb-3 font-lato text-sm">{error}</p>}
-
+      {error && (
+        <p className="text-feedback-danger mb-3 font-lato text-sm">{error}</p>
+      )}
 
       <div className="rounded-lg overflow-hidden">
         <table className="w-full table-fixed">
@@ -106,7 +116,8 @@ export function Service() {
               <th className="p-2 md:w-1/3 sm:p-4 text-sm">Titulo</th>
               <th className="p-2 md:w-1/3 sm:p-4 text-sm text-center">Valor</th>
               <th className="p-2 md:w-1/3 sm:p-4 text-sm text-center md:text-right">
-                Status <span className="hidden md:inline text-gray-600">A.</span>
+                Status{" "}
+                <span className="hidden md:inline text-gray-600">A.</span>
               </th>
               <th className="md:w-[180px] p-4"></th>
             </tr>
@@ -118,7 +129,7 @@ export function Service() {
                   {service.title}
                 </td>
                 <td className="p-2 sm:p-4 text-xs sm:text-base">
-                  R$ {service.value.toFixed(2).replace('.', ',')}
+                  R$ {service.value.toFixed(2).replace(".", ",")}
                 </td>
                 <td className="p-2 sm:p-4 text-sm flex mt-2 justify-center md:justify-end">
                   <ServiceStatus status={service.status} />
@@ -127,7 +138,9 @@ export function Service() {
                   <div className="flex justify-end gap-2">
                     <ServiceButton
                       status={service.status}
-                      onClick={() => handleToggleServiceStatus(service.id, service.status)}
+                      onClick={() =>
+                        handleToggleServiceStatus(service.id, service.status)
+                      }
                     />
                     <button
                       onClick={() => handleEditServiceModal(service)}
@@ -158,8 +171,8 @@ export function Service() {
       <Pagination
         current={page}
         total={totalOfPage}
-        onNext={() => handlePagination('next')}
-        onPrevious={() => handlePagination('previous')}
+        onNext={() => handlePagination("next")}
+        onPrevious={() => handlePagination("previous")}
       />
       <ServiceModal
         isOpen={isModalOpen}
