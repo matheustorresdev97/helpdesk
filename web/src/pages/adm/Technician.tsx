@@ -1,41 +1,37 @@
-import { AxiosError } from 'axios';
-import { useEffect, useState } from 'react';
+import { AxiosError } from "axios";
+import { useEffect, useState } from "react";
 
-import { Pagination } from '../../components/Pagination';
-import { api } from '../../services/api';
-import { getInitials } from '../../utils/get-name-initials';
-import { AdminDashboardButton } from '../../components/AdminDashboardButton';
-import { useNavigate } from 'react-router';
+import { Pagination } from "../../components/Pagination";
+import { api } from "../../services/api";
+import { getInitials } from "../../utils/get-name-initials";
+import { AdminDashboardButton } from "../../components/AdminDashboardButton";
+import { useNavigate } from "react-router";
 
 const PER_PAGE = 8;
 
 export function Technician() {
   const navigate = useNavigate();
 
-
   const [page, setPage] = useState(1);
   const [totalOfPage, setTotalOfPage] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [technicians, setTechnicians] = useState<Technician[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAddTechnicians, setIsAddTechnicians] = useState(true);
 
-  function handlePagination(action: 'next' | 'previous') {
+  function handlePagination(action: "next" | "previous") {
     setPage((prevPage) => {
-      if (action === 'next' && prevPage < totalOfPage) {
+      if (action === "next" && prevPage < totalOfPage) {
         return prevPage + 1;
       }
-      if (action === 'previous' && prevPage > 1) {
+      if (action === "previous" && prevPage > 1) {
         return prevPage - 1;
       }
       return prevPage;
     });
   }
 
-
   async function fetchTechnicians() {
     try {
-      const { data } = await api.get<TechnicianAPIResponse>('/technicians', {
+      const { data } = await api.get<TechnicianAPIResponse>("/technicians", {
         params: {
           page,
           perPage: PER_PAGE,
@@ -47,7 +43,7 @@ export function Technician() {
       setError(null);
     } catch (error) {
       if (error instanceof AxiosError) {
-        setError(error.response?.data.message || 'Erro ao carregar técnicos.');
+        setError(error.response?.data.message || "Erro ao carregar técnicos.");
       }
     }
   }
@@ -58,11 +54,17 @@ export function Technician() {
   return (
     <>
       <div className="flex place-content-between mb-7">
-        <h1 className="text-blue-dark font-lato font-bold text-2xl">Técnicos</h1>
-        <AdminDashboardButton onClick={() => navigate('/technicians/new')}>Novo</AdminDashboardButton>
+        <h1 className="text-blue-dark font-lato font-bold text-2xl">
+          Técnicos
+        </h1>
+        <AdminDashboardButton onClick={() => navigate("/technicians/new")}>
+          Novo
+        </AdminDashboardButton>
       </div>
 
-      {error && <p className="text-feedback-danger mb-3 font-lato text-sm">{error}</p>}
+      {error && (
+        <p className="text-feedback-danger mb-3 font-lato text-sm">{error}</p>
+      )}
 
       <div className="rounded-lg overflow-hidden">
         <table className="w-full table-fixed">
@@ -72,7 +74,9 @@ export function Technician() {
           >
             <tr>
               <th className="p-2 sm:p-4 text-sm">Nome</th>
-              <th className="p-2 sm:p-4 text-sm hidden md:block text-center">E-mail</th>
+              <th className="p-2 sm:p-4 text-sm hidden md:block text-center">
+                E-mail
+              </th>
               <th className="w-[115px] md:w-auto p-2 sm:p-4 text-sm text-center">
                 Disponibilidade
               </th>
@@ -130,7 +134,9 @@ export function Technician() {
                 <td className="p-2 sm:p-4">
                   <div className="flex justify-end gap-2">
                     <button
-                      onClick={() => navigate('/technicians/edit', { state: technician })}
+                      onClick={() =>
+                        navigate("/technicians/edit", { state: technician })
+                      }
                       className="bg-gray-500 p-2 sm:p-3 rounded-md cursor-pointer hover:text-gray-600 hover:bg-blue-dark"
                     >
                       <svg
@@ -158,8 +164,8 @@ export function Technician() {
       <Pagination
         current={page}
         total={totalOfPage}
-        onNext={() => handlePagination('next')}
-        onPrevious={() => handlePagination('previous')}
+        onNext={() => handlePagination("next")}
+        onPrevious={() => handlePagination("previous")}
       />
     </>
   );
