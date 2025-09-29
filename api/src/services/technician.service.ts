@@ -19,6 +19,7 @@ export class TechnicianService {
         password: hashedPassword,
         name,
         role: "TECHNICIAN",
+        profilePhoto: "",
         availability: {
           create: availability.map((time) => ({ time })),
         },
@@ -48,7 +49,9 @@ export class TechnicianService {
         profilePhoto: profilePhoto ?? "",
         availability: {
           deleteMany: {},
-          create: availability.map((time) => ({ time })),
+          create: availability
+            .sort((a, b) => a.getTime() - b.getTime())
+            .map((time) => ({ time })),
         },
       },
       include: { availability: true },
@@ -68,11 +71,10 @@ export class TechnicianService {
 
     const skip = (page - 1) * perPage;
 
-
     const data = await prisma.technician.findMany({
       skip,
       take: perPage,
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: "asc" },
       include: { availability: true },
     });
 
