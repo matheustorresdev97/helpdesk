@@ -6,9 +6,17 @@ import { getInitials } from "../utils/get-name-initials";
 import { translateRole } from "../utils/translate-role";
 import { ProfileMenu } from "../components/ProfileMenu";
 
-export function SidebarLayout() {
+type Props = {
+  onOpenProfileModal: () => void;
+};
+
+export function SidebarLayout({ onOpenProfileModal }: Props) {
   const { session } = useAuth();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  const openProfileModal = () => setIsProfileModalOpen(true);
+  const closeProfileModal = () => setIsProfileModalOpen(false);
 
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const profileButtonRef = useRef<HTMLDivElement>(null);
@@ -76,7 +84,6 @@ export function SidebarLayout() {
             </span>
           </NavLink>
 
-          {/* ADD TICKET */}
           {session?.user.role === "CLIENT" && (
             <NavLink
               to={"/tickets/new"}
@@ -102,7 +109,6 @@ export function SidebarLayout() {
             </NavLink>
           )}
 
-          {/* TECHNICIANS */}
           {session?.user.role === "ADMIN" && (
             <NavLink
               to="/technicians"
@@ -201,6 +207,7 @@ export function SidebarLayout() {
               <ProfileMenu
                 isOpen={isProfileMenuOpen}
                 onClose={toggleProfileMenu}
+                onOpenModal={onOpenProfileModal}
               />
             </div>
           )}
