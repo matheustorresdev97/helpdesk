@@ -1,12 +1,12 @@
 import { hash } from "bcrypt";
 import {
   responseTechnicianSchema,
-  UpdateTechnicianPayload,
+  UpdateTechnicianByAdminPayload,
 } from "../schemas/technician.schema";
 import { prisma } from "../config/prisma.config";
 
 export class AdminService {
-  async update(id: string, payload: UpdateTechnicianPayload) {
+  async update(id: string, payload: UpdateTechnicianByAdminPayload) {
     const { email, password, name, profilePhoto, availability } = payload;
     const hashedPassword = password ? await hash(password, 8) : undefined;
 
