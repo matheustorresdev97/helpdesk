@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { AxiosError } from "axios";
+import { ZodError } from "zod";
+import { api } from "../services/api";
+import { useEffect, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
 import { useAuth } from "../hooks/useAuth";
 import { Button } from "./Button";
@@ -11,10 +14,62 @@ type ProfileModalProps = {
 };
 
 export function ProfileModal({ onClose, isOpen }: ProfileModalProps) {
-  const { session } = useAuth();
+  const { session, update } = useAuth();
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [name, setName] = useState(session?.user.name || "");
   const [email, setEmail] = useState(session?.user.email || "");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (isOpen && session) {
+      setName(session.user.name || "");
+      setEmail(session.user.email || "");
+      setError("");
+    }
+  }, [isOpen, session]);
+
+  async function handleUpdateData(event: FormEvent) {
+    event.preventDefault();
+    setError("");
+
+    if (!session || isLoading) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    const id = session.user.id;
+
+    const data = {
+      name,
+      email,
+    };
+
+    try {
+      const response = await api.put(`/clients/${id}`, data);
+
+      update({
+        ...session,
+        user: {
+          ...session.user,
+          ...response.data,
+        },
+      });
+
+      onClose();
+    } catch (error) {
+      if (error instanceof ZodError) {
+        setError(error.issues[0].message);
+      } else if (error instanceof AxiosError) {
+        setError(error.response?.data.message);
+      } else {
+        setError("Ocorreu um erro inesperado.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   if (!isOpen) return null;
 
@@ -27,7 +82,6 @@ export function ProfileModal({ onClose, isOpen }: ProfileModalProps) {
         className="w-[440px] bg-white p-6 rounded shadow-lg text-gray-700"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Conteúdo principal ou Alterar Senha */}
         {!isChangePasswordOpen ? (
           <>
             {/* HEADER */}
@@ -51,11 +105,9 @@ export function ProfileModal({ onClose, isOpen }: ProfileModalProps) {
               </svg>
             </div>
 
-            {/* Borda */}
             <div className="border-b border-gray-500 w-[calc(100%+48px)] -ml-6 mb-5"></div>
 
-            {/* FORMULÁRIO */}
-            <form>
+            <form onSubmit={handleUpdateData}>
               <div className="flex items-center mb-5">
                 {session?.user.profilePhoto ? (
                   <img
@@ -145,9 +197,16 @@ export function ProfileModal({ onClose, isOpen }: ProfileModalProps) {
               <div className="border-b border-gray-500 w-[calc(100%+48px)] -ml-6 mb-5"></div>
 
               <Button type="submit" className="mx-auto block mt-4">
-                Salvar
+                {isLoading ? "Salvando..." : "Salvar"}
               </Button>
             </form>
+            <div className="min-h-[24px] mt-2 text-center">
+              {error && (
+                <p className="font-lato font-bold text-sm text-feedback-danger shake">
+                  {error}
+                </p>
+              )}
+            </div>
           </>
         ) : (
           <ChangePasswordContent
