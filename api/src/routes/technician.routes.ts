@@ -24,6 +24,11 @@ technicianRoutes.put(
   verifyAuthorization(["TECHNICIAN"]),
   technicianController.update
 );
+technicianRoutes.get(
+  "/:id",
+  verifyAuthorization(["TECHNICIAN"]),
+  technicianController.show
+);
 technicianRoutes.patch(
   "/:id",
   verifyAuthorization(["TECHNICIAN"]),

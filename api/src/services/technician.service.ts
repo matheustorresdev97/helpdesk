@@ -69,7 +69,27 @@ export class TechnicianService {
     return { technicians, pagination };
   }
 
-   async update(id: string, payload: UpdateTechnicianPayload) {
+  async show(id: string) {
+    const data = await prisma.technician.findUnique({
+      where: { id },
+      include: { availability: true },
+    });
+
+    if (!data) {
+      throw new AppError("Tecnico não localizado", 404);
+    }
+
+    const technicianMapped = {
+      ...data,
+      availability: data.availability.map((a) => a.time),
+    };
+
+    const technician = responseTechnicianSchema.parse(technicianMapped);
+
+    return technician;
+  }
+
+  async update(id: string, payload: UpdateTechnicianPayload) {
     const { email, name, profilePhoto } = payload;
 
     const data = await prisma.technician.update({
@@ -85,7 +105,6 @@ export class TechnicianService {
 
     return technician;
   }
-
 
   async updatePassword(id: string, payload: UpdatePasswordPayload) {
     const user = await prisma.technician.findUnique({
