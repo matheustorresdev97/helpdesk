@@ -1,4 +1,4 @@
-import { hash } from "bcrypt";
+import { compare, hash } from "bcrypt";
 import z from "zod";
 import {
   CreateClientPayload,
@@ -7,6 +7,7 @@ import {
 } from "../schemas/client.schema";
 import { prisma } from "../config/prisma.config";
 import { AppError } from "../util/app-error";
+import { UpdatePasswordPayload } from "../schemas/user.schema";
 
 export class ClientService {
   async create(payload: CreateClientPayload) {
@@ -90,5 +91,33 @@ export class ClientService {
     const data = await prisma.client.delete({
       where: { id },
     });
+  }
+
+  async updatePassword(id: string, payload: UpdatePasswordPayload) {
+    const user = await prisma.client.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new AppError("Usuario não encontrado", 404);
+    }
+
+    const isOldPasswordValid = await compare(payload.password, user.password);
+    if (!isOldPasswordValid) {
+      throw new AppError("Senha atual incorreta");
+    }
+
+    if (payload.newPassword.length < 6) {
+      throw new AppError("Mínimo de 6 caracteres", 409);
+    }
+
+    const newPassword = await hash(payload.newPassword, 8);
+
+    await prisma.client.update({
+      where: { id },
+      data: { password: newPassword },
+    });
+
+    return;
   }
 }
