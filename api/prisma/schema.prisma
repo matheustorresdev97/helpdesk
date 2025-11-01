@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TicketStatus {
+  OPEN
+  PROCESSING
+  CLOSED
+}
+
+enum ServiceStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum Role {
+  ADMIN
+  CLIENT
+  TECHNICIAN
+}
+
+model User {
+  id           String  @id @default(uuid())
+  email        String  @unique
+  password     String
+  name         String
+  profilePhoto String?
+  role         Role
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  ticketsAsClient Ticket[] @relation("ClientTickets")
+  
+  ticketsAsTechnician Ticket[] @relation("TechnicianTickets")
+  
+
+  availability Availability[]
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+model Availability {
+  id     String   @id @default(uuid())
+  userId String
+  time   DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, time])
+  @@index([userId])
+  @@map("availabilities")
+}
+
+model Ticket {
+  id           Int     @id @default(autoincrement())
+  title        String
+  description  String
+  clientId     String
+  technicianId String?
+  initialCost  Decimal @default(200.00)
+  status       TicketStatus @default(OPEN)
+
+  client     User      @relation("ClientTickets", fields: [clientId], references: [id], onDelete: Cascade)
+  technician User?     @relation("TechnicianTickets", fields: [technicianId], references: [id])
+  services   Service[] @relation("TicketServices")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([clientId])
+  @@index([technicianId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("tickets")
+}
+
+model Service {
+  id     String        @id @default(uuid())
+  title  String
+  value  Decimal
+  status ServiceStatus @default(ACTIVE)
+
+  tickets Ticket[] @relation("TicketServices")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@map("services")
+}
