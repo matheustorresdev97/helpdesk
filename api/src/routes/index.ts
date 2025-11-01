@@ -6,6 +6,7 @@ import { clientRoutes } from "./client.routes";
 import { ticketRoutes } from "./ticket.routes";
 import { serviceRoutes } from "./service.routes";
 import { adminRoutes } from "./admin.routes";
+import { uploadRoutes } from "./uploads.routes";
 
 const routes = Router();
 
@@ -15,5 +16,6 @@ routes.use("/clients", clientRoutes);
 routes.use("/tickets", ticketRoutes);
 routes.use("/services", serviceRoutes);
 routes.use("/admin", adminRoutes);
+routes.use("/uploads", uploadRoutes);
 
 export { routes };
