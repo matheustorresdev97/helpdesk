@@ -1,11 +1,10 @@
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 
 import { AuthLayout } from "../layouts/auth.layout";
 
-import { SignIn } from "../pages/signin";
-import { SignUp } from "../pages/signup";
+import { SignIn } from "../pages/auth/signin";
+import { SignUp } from "../pages/auth/signup";
 
-import { NotFound } from "../pages/not-found";
 
 
 export function AuthRoutes() {
@@ -16,7 +15,7 @@ export function AuthRoutes() {
         <Route path="/signup" element={<SignUp />} />
       </Route>
 
-      <Route path="*" element={<NotFound />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
