@@ -4,19 +4,17 @@ import { SidebarLayout } from "./sidebar.layout";
 import { useAuth } from "../hooks/useAuth";
 import { translateRole } from "../utils/translate-role";
 import { getInitials } from "../utils/get-name-initials";
-import { Link } from "react-router";
-import CircleUserSVG from "../assets/icons/circle-user.svg";
-import LogoutSVG from "../assets/icons/log-out.svg";
 import MenuSvg from "../assets/icons/menu.svg";
 import CloseSvg from "../assets/icons/x.svg";
 import LogoIconSvg from "../assets/img/Logo_IconLight.svg";
 import { SidebarMobileLayout } from "./sidebar-mobile.layout";
+import { ProfileMenu } from "../components/ProfileMenu";
 
 export function AppLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
-  const { session, remove } = useAuth();
+  const { session } = useAuth();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const profileMenuRef = useRef<HTMLDivElement>(null);
@@ -68,11 +66,7 @@ export function AppLayout() {
           className="p-3 text-white focus:outline-none bg-gray-200 rounded-md mr-4"
         >
           {isSidebarOpen ? (
-            <img
-              src={CloseSvg}
-              alt="close menu"
-              className="w-5 h-5"
-            />
+            <img src={CloseSvg} alt="close menu" className="w-5 h-5" />
           ) : (
             <img src={MenuSvg} alt="menu" className="w-5 h-5" />
           )}
@@ -97,37 +91,11 @@ export function AppLayout() {
             {getInitials(session?.user.name)}
           </div>
           {isProfileMenuOpen && (
-            <div
-              ref={profileMenuRef}
-              className="absolute right-0 top-full mt-2 w-40 bg-gray-100 rounded-md shadow-lg z-50 py-5"
-            >
-              <div className="text-gray-400 font-bold text-xs font-lato p-4 border-b border-gray-300">
-                Opções
-              </div>
-              <Link
-                to={"/"}
-                className="text-gray-600 text-xs font-lato flex gap-2 mt-4 ml-3"
-              >
-                <img
-                  src={CircleUserSVG}
-                  alt="profile-icon"
-                  className="w-5 h-5"
-                />
-                <span className="text-sm font-lato">Perfil</span>
-              </Link>
-              <button
-                onClick={() => {
-                  remove();
-                }}
-                className="ml-3 text-feedback-danger text-sm font-lato flex items-center gap-2 mt-5"
-              >
-                <img
-                  src={LogoutSVG}
-                  alt="logout-icon"
-                  className="w-5 h-5"
-                />
-                <p>Sair</p>
-              </button>
+            <div ref={profileMenuRef}>
+              <ProfileMenu
+                isOpen={isProfileMenuOpen}
+                onClose={toggleProfileMenu}
+              />
             </div>
           )}
         </div>

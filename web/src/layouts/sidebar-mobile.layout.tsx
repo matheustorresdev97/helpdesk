@@ -64,7 +64,7 @@ export function SidebarMobileLayout() {
           <NavLink
             to="/technicians"
             className={({ isActive }) =>
-              `flex items-center gap-[12px] h-[44px] text-gray-400 cursor-pointer px-5
+              `flex items-center gap-3 h-11 text-gray-400 cursor-pointer px-5
             hover:bg-gray-200 hover:rounded-sm hover:text-gray-600
               ${isActive ? "bg-blue-dark text-gray-600 rounded-sm" : ""}`
             }
