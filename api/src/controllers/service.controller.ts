@@ -4,6 +4,7 @@ import {
   createServiceSchema,
   updateServiceSchema,
 } from "@/schemas/service.schema";
+import { paginationSchema } from "@/schemas/pagination.schema";
 
 const serviceService = new ServiceService();
 
@@ -33,7 +34,8 @@ export class ServiceController {
 
   async index(request: Request, response: Response) {
     try {
-      const services = await serviceService.index();
+      const { page, perPage } = paginationSchema.parse(request.query);
+      const services = await serviceService.index(page, perPage);
 
       return response.json(services);
     } catch (error) {
