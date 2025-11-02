@@ -28,8 +28,7 @@ export class ClientService {
         email,
         password: hashedPassword,
         name,
-        role: Role.CLIENT,
-        profilePhoto: profilePhoto ?? "",
+        role: Role.CLIENT
       },
       select: {
         id: true,
@@ -114,7 +113,6 @@ export class ClientService {
       data: {
         name,
         email,
-        profilePhoto: profilePhoto ?? undefined,
         ...(hashedPassword && { password: hashedPassword }),
       },
     });

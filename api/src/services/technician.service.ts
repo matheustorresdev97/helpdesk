@@ -29,7 +29,6 @@ export class TechnicianService {
         password: hashedPassword,
         name,
         role: "TECHNICIAN",
-        profilePhoto,
         availability: {
           create: availability.map((time) => ({ time })),
         },
@@ -71,7 +70,9 @@ export class TechnicianService {
         profilePhoto: profilePhoto ?? "",
         availability: {
           deleteMany: {},
-          create: availability.map((time) => ({ time })),
+          create: availability
+            .sort((a, b) => a.getTime() - b.getTime())
+            .map((time) => ({ time })),
         },
       },
 
