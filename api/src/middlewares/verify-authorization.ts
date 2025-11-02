@@ -14,6 +14,14 @@ export function verifyAuthorization(role: string[]) {
       );
     }
 
+    if (request.user.role !== "ADMIN") {
+      const { id } = request.params;
+
+      if (request.user.id !== id) {
+        throw new AppError("Você só pode acessar seus próprios dados.", 403);
+      }
+    }
+
     return next();
   };
 }
