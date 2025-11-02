@@ -4,6 +4,7 @@ import { Ticket } from "../pages/ticket";
 import { Technician } from "../pages/adm/technician";
 import { Client } from "../pages/adm/client";
 import { Service } from "../pages/adm/service";
+import { TechnicianForm } from "../pages/technician-form";
 
 export function AdminRoutes() {
   return (
@@ -11,6 +12,7 @@ export function AdminRoutes() {
       <Route path="/" element={<AppLayout />}>
         <Route index element={<Ticket />} />
         <Route path="/technicians" element={<Technician />} />
+        <Route path="/technicians/:mode" element={<TechnicianForm />} />
         <Route path="/clients" element={<Client />} />
         <Route path="/services" element={<Service />} />
       </Route>

@@ -4,6 +4,7 @@ import { SidebarLayout } from "./sidebar.layout";
 import { useAuth } from "../hooks/useAuth";
 import { translateRole } from "../utils/translate-role";
 import { getInitials } from "../utils/get-name-initials";
+
 import MenuSvg from "../assets/icons/menu.svg";
 import CloseSvg from "../assets/icons/x.svg";
 import LogoIconSvg from "../assets/img/Logo_IconLight.svg";
@@ -54,8 +55,8 @@ export function AppLayout() {
   }, [sidebarRef, buttonRef, profileMenuRef, profileButtonRef]);
 
   return (
-    <div className="flex flex-col md:grid md:grid-cols-[200px_1fr] w-full min-h-screen bg-gray-100 overflow-x-hidden">
-      <div className="hidden md:block">
+    <div className="flex flex-col md:flex-row w-full min-h-screen bg-gray-100 overflow-x-hidden">
+      <div className="hidden md:block fixed h-screen w-[200px]">
         <SidebarLayout />
       </div>
 
@@ -66,7 +67,11 @@ export function AppLayout() {
           className="p-3 text-white focus:outline-none bg-gray-200 rounded-md mr-4"
         >
           {isSidebarOpen ? (
-            <img src={CloseSvg} alt="close menu" className="w-5 h-5" />
+            <img
+              src={CloseSvg}
+              alt="close menu"
+              className="w-5 h-5"
+            />
           ) : (
             <img src={MenuSvg} alt="menu" className="w-5 h-5" />
           )}
@@ -103,14 +108,15 @@ export function AppLayout() {
 
       <div
         ref={sidebarRef}
-        className={`fixed left-0 w-[220px] h-[280px] z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed left-0 w-[220px] h-[280px] z-50 transform transition-transform duration-300 ease-in-out md:hidden ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
         style={{ top: "64px" }}
       >
         <SidebarMobileLayout />
       </div>
-      <MainLayout />
+      <div className="md:ml-[200px] grow">
+        <MainLayout />
+      </div>
     </div>
   );
 }
