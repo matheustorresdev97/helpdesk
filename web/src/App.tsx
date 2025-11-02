@@ -1,8 +1,10 @@
+import { AuthProvider } from "./context/auth.context";
+import { Routes } from "./routes";
+
 export default function App() {
-
   return (
-      <h1>HELPDESK</h1>    
-  )
+    <AuthProvider>
+      <Routes />
+    </AuthProvider>
+  );
 }
-
-
