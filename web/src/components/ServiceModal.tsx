@@ -1,5 +1,5 @@
-import { AxiosError } from 'axios';
-import { useEffect, useState, type FormEvent } from 'react';
+import { AxiosError } from "axios";
+import { useEffect, useState, type FormEvent } from "react";
 import { api } from "../services/api";
 import { Button } from "./Button";
 import { Input } from "./Input";
@@ -11,18 +11,23 @@ type Props = {
   onClose: () => void;
 };
 
-export function ServiceModal({ service, isOpen, isAddService, onClose }: Props) {
+export function ServiceModal({
+  service,
+  isOpen,
+  isAddService,
+  onClose,
+}: Props) {
   const [title, setTitle] = useState("");
   const [value, setValue] = useState("");
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (service && !isAddService) {
       setTitle(service.title);
       setValue(String(service.value));
     } else {
-      setTitle('');
-      setValue('');
+      setTitle("");
+      setValue("");
     }
   }, [service, isAddService]);
 
@@ -34,7 +39,7 @@ export function ServiceModal({ service, isOpen, isAddService, onClose }: Props) 
     e.preventDefault();
 
     if (!title || !value) {
-      setError('Por favor, preencha todos os campos.');
+      setError("Por favor, preencha todos os campos.");
       return;
     }
 
@@ -47,29 +52,33 @@ export function ServiceModal({ service, isOpen, isAddService, onClose }: Props) 
       if (!isAddService && service) {
         await api.put(`/services/${service.id}`, data);
       } else {
-        await api.post('/services', data);
+        await api.post("/services", data);
       }
 
-      setTitle('');
-      setValue('');
-      setError('');
-      onClose();
+      setTitle("");
+      setValue("");
+      handleClose();
     } catch (error) {
       if (error instanceof AxiosError) {
         setError(
           error.response?.data?.issues?.properties.title.errors[0] ||
-          'Ocorreu um erro ao salvar o serviço.',
+            "Ocorreu um erro ao salvar o serviço."
         );
       } else {
-        setError('Ocorreu um erro inesperado.');
+        setError("Ocorreu um erro inesperado.");
       }
     }
+  }
+
+  function handleClose() {
+    setError("");
+    onClose();
   }
 
   return (
     <div
       className="fixed inset-0 bg-black/50 flex justify-center items-center p-4 z-50"
-      onClick={onClose}
+      onClick={handleClose}
     >
       <div
         className="bg-gray-600 w-[440px] h-[390px] rounded-lg shadow-xl flex flex-col"
@@ -77,7 +86,7 @@ export function ServiceModal({ service, isOpen, isAddService, onClose }: Props) 
       >
         <header className="p-7 border-b border-gray-500 flex justify-between">
           <h2 className="text-gray-200 font-lato font-bold text-base">
-            {isAddService ? 'Cadastro de Serviço' : 'Serviço'}
+            {isAddService ? "Cadastro de Serviço" : "Serviço"}
           </h2>
           <svg
             width="18"
@@ -86,7 +95,7 @@ export function ServiceModal({ service, isOpen, isAddService, onClose }: Props) 
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             className="cursor-pointer text-gray-300"
-            onClick={onClose}
+            onClick={handleClose}
           >
             <path
               fillRule="evenodd"
@@ -116,10 +125,14 @@ export function ServiceModal({ service, isOpen, isAddService, onClose }: Props) 
             />
           </main>
 
-          <footer className="flex flex-col items-center p-7 border-t border-gray-500">
+          <footer className="flex flex-col items-center p-3 border-t border-gray-500">
             <Button type="submit">Salvar</Button>
-            <div className="min-h-6 mt-1">
-              {error && <p className="font-lato text-sm text-feedback-danger">{error}</p>}
+            <div className="min-h-6 mt-2">
+              {error && (
+                <p className="font-lato text-sm text-feedback-danger shake">
+                  {error}
+                </p>
+              )}
             </div>
           </footer>
         </form>
