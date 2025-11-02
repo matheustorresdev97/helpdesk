@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { TechnicianService } from "../services/technician.service";
-import { createTechnicianSchema } from "../schemas/technician.schema";
+import {
+  createTechnicianSchema,
+  updateTechnicianSchema,
+} from "../schemas/technician.schema";
 
 const technicianService = new TechnicianService();
 
@@ -12,6 +15,19 @@ export class TechnicianController {
       const technician = await technicianService.create(payload);
 
       return response.status(201).json(technician);
+    } catch (error) {
+      error;
+    }
+  }
+
+  async update(request: Request, response: Response) {
+    try {
+      const { id } = request.params;
+      const payload = updateTechnicianSchema.parse(request.body);
+
+      const technician = await technicianService.update(id, payload);
+
+      return response.json(technician);
     } catch (error) {
       error;
     }

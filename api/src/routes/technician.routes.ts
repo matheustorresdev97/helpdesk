@@ -9,8 +9,12 @@ const technicianController = new TechnicianController();
 
 technicianRoutes.use(ensureAuthenticated);
 
-technicianRoutes.get("/", technicianController.index);
-technicianRoutes.post("/", technicianController.create);
-technicianRoutes.use(verifyAuthorization(["ADMIN"]));
+technicianRoutes.get('/', verifyAuthorization(['ADMIN']), technicianController.index);
+technicianRoutes.post('/', verifyAuthorization(['ADMIN']), technicianController.create);
+technicianRoutes.put(
+  '/:id',
+  verifyAuthorization(['TECHNICIAN', 'ADMIN']),
+  technicianController.update,
+);
 
 export { technicianRoutes };
