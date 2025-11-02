@@ -14,7 +14,7 @@ export function verifyAuthorization(role: string[]) {
       );
     }
 
-    if (request.user.role !== "ADMIN") {
+    if (request.user.role !== "ADMIN" && request.params.id) {
       const { id } = request.params;
 
       if (request.user.id !== id) {
