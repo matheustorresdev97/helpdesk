@@ -4,7 +4,7 @@ const envSchema = z.object({
   DATABASE_URL: z.url({ message: "URL do banco de dados inválida" }),
   JWT_SECRET: z.string().min(1, "JWT_SECRET deve ser fornecido"),
   JWT_EXPIRES_IN: z.coerce.number().optional().default(86400),
-
+  FRONTEND_URL: z.url(),
   PORT: z.coerce.number().optional().default(3333),
 });
 
