@@ -6,6 +6,7 @@ import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 import { useAuth } from "../hooks/useAuth";
 import { api } from "../services/api";
+import { useNavigate } from "react-router";
 
 const signInSchema = z.object({
   email: z.email({ message: "Informe um email válido" }),
@@ -15,6 +16,7 @@ const signInSchema = z.object({
 export function SignIn() {
   const [state, formAction, isLoading] = useActionState(signIn, null);
   const auth = useAuth();
+  const navigate = useNavigate();
 
   async function signIn(_: any, formData: FormData) {
     try {
@@ -26,8 +28,6 @@ export function SignIn() {
       const response = await api.post("/sessions", data);
 
       auth.save(response.data);
-
-      console.log(auth.session?.user.role);
     } catch (error) {
       if (error instanceof ZodError) {
         return { message: error.issues[0].message };
@@ -77,11 +77,7 @@ export function SignIn() {
 
           {state?.message && (
             <div className="flex items-center gap-2">
-              <img
-                src={circleAlertSvg}
-                alt="alert-icon"
-                className="w-4 h-4"
-              />
+              <img src={circleAlertSvg} alt="alert-icon" className="w-4 h-4" />
               <p className="text-sm text-feedback-danger text-center my-4 font-medium">
                 {state?.message}
               </p>
@@ -96,7 +92,7 @@ export function SignIn() {
 
       <div
         className="
-          w-full max-w-md md:w-[400px] p-6 mt-4 md:mt-8
+          md:w-[400px] p-6 mt-4 md:mt-8
           rounded-lg border border-gray-500
           flex flex-col gap-6
         "
@@ -109,7 +105,9 @@ export function SignIn() {
             Cadastre agora mesmo
           </p>
         </div>
-        <Button variantStyle="light">Criar Conta</Button>
+        <Button variantStyle="light" onClick={() => navigate("/signup")}>
+          Criar Conta
+        </Button>
       </div>
     </>
   );

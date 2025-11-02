@@ -7,7 +7,7 @@ export function AuthLayout() {
       <div className="grow"></div>
       <main
         className="bg-gray-600 flex flex-col items-center
-      rounded-t-lg min-h-[824px] 
+      rounded-t-lg min-h-[824px] px-4
       md:rounded-tl-lg md:rounded-tr-none md:w-1/2  md:h-auto"
       >
         <img
