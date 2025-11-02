@@ -1,0 +1,30 @@
+@baseUrl = http://localhost:3333
+
+@apiBase = {{baseUrl}}/services
+
+@serviceId = 1ddc8f2c-31dd-4224-970f-9431716b3bc7
+
+### Criar um novo serviço
+POST {{apiBase}}
+Content-Type: application/json
+
+{
+  "title": "Consultoria em TI",
+  "value": 450.00
+}
+
+### Atualizar um serviço existente
+
+PUT {{apiBase}}/{{serviceId}}
+Content-Type: application/json
+
+{
+  "title": "Consultoria em TI (Valor Promocional)",
+  "status": "INACTIVE"
+}
+
+
+### Listar todos os serviços (index)
+
+GET {{apiBase}}
+Accept: application/json
