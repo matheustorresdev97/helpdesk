@@ -16,4 +16,14 @@ export class TechnicianController {
       error;
     }
   }
+
+  async index(request: Request, response: Response) {
+    try {
+      const technicians = await technicianService.index();
+
+      return response.json(technicians);
+    } catch (error) {
+      error;
+    }
+  }
 }

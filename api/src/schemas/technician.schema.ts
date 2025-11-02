@@ -18,3 +18,13 @@ export const createTechnicianSchema = z.object({
 });
 
 export type CreateTechnicianPayload = z.infer<typeof createTechnicianSchema>;
+
+export const responseTechnicianSchema = z.object({
+  id: z.uuid(),
+  email: z.email(),
+  name: z.string(),
+  role: z.string(),
+  availability: z.array(z.coerce.date()),
+});
+
+export type ResponseTechnicianPayload = z.infer<typeof responseTechnicianSchema>;

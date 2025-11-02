@@ -23,7 +23,7 @@ export class ClientService {
         password: hashedPassword,
         name,
         role: "CLIENT",
-        profilePhoto: profilePhoto ?? null,
+        profilePhoto: "",
       },
       select: {
         id: true,

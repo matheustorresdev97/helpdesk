@@ -1,9 +1,11 @@
 import { hash } from "bcrypt";
 import {
   CreateTechnicianPayload,
+  responseTechnicianSchema,
 } from "../schemas/technician.schema";
 import { prisma } from "../configs/prisma.config";
 import { AppError } from "@/utils/app-error";
+import z from "zod";
 
 export class TechnicianService {
   async create(payload: CreateTechnicianPayload) {
@@ -30,7 +32,14 @@ export class TechnicianService {
           create: availability.map((time) => ({ time })),
         },
       },
-      include: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        profilePhoto: true,
+        createdAt: true,
+        updatedAt: true,
         availability: {
           select: {
             id: true,
@@ -40,11 +49,23 @@ export class TechnicianService {
       },
     });
 
-    const { password: _, ...technicianWithoutPassword } = technician;
-
     return {
-      ...technicianWithoutPassword,
-      availability: technicianWithoutPassword.availability.map((a) => a.time),
+      ...technician,
+      availability: technician.availability.map((a) => a.time),
     };
+  }
+
+  async index() {
+    const responseTechnicianArraySchema = z.array(responseTechnicianSchema);
+    const data = await prisma.user.findMany({
+      include: { availability: true },
+    });
+
+    const technicians = data.map((tech) => ({
+      ...tech,
+      availability: tech.availability.map((a) => a.time),
+    }));
+
+    return responseTechnicianArraySchema.parse(technicians);
   }
 }
