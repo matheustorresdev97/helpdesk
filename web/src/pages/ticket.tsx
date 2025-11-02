@@ -53,7 +53,7 @@ export function Ticket() {
                   >
                     AC
                   </span>
-                  <p className="text-xs sm:text-base">André Costa</p>
+                  <p className="text-xs sm:text-base">Matheus Torres</p>
                 </div>
               </td>
               <td className="p-2 sm:p-4 font-lato hidden md:table-cell">
@@ -66,7 +66,7 @@ export function Ticket() {
                     CS
                   </span>
                   <p className="text-xs sm:text-base hidden md:table-cell">
-                    Carlos Silva
+                    Arrascaeta
                   </p>
                 </div>
               </td>
