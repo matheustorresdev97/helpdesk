@@ -31,4 +31,5 @@ export const responseClientSchema = z.object({
   email: z.email(),
   name: z.string(),
   role: z.string(),
+  profilePhoto: z.string().optional(),
 });
