@@ -9,7 +9,7 @@ export function SidebarLayout() {
 
   return (
     <>
-      <aside className="flex flex-col">
+      <aside className="flex flex-col h-screen">
         <header>
           <div className="flex gap-3 px-5 py-7 border-b border-gray-200">
             <img src={LogoIconSvg} alt="logo" className="w-11 h-11 " />
@@ -23,8 +23,7 @@ export function SidebarLayout() {
             </div>
           </div>
         </header>
-        <nav className="flex flex-col items-center justify-center mt-6 gap-1 ">
-          {/* TICKETS */}
+        <nav className="flex flex-col items-center justify-center mt-6 gap-1 grow">
           <NavLink
             to="/"
             className={({ isActive }) =>
