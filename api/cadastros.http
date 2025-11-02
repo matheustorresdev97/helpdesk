@@ -1,0 +1,58 @@
+@baseUrl = http://localhost:3333
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjIwNDE0MjksImV4cCI6MTc2MjEyNjAyOSwic3ViIjoiZTBkNWU0ZTQtYThmOC00NWY1LTg5YzItNmViNGMwOTYwM2M1In0.ynPKes6k__vxEbz7Rvl68cpWhCLkXXuhsVTgzl7HiKI
+
+### CRIAR - ADMIN
+POST {{baseUrl}}/admins
+Content-Type: application/json
+
+{
+  "email": "admin@email.com",
+  "password": "senha123",
+  "name": "MATHEUS ADMIN",
+  "profilePhoto": "https://randomuser.me/api/portraits/men/1.jpg"
+}
+
+
+### CRIAR - TÉCNICO
+POST {{baseUrl}}/technicians
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+{
+  "email": "tec@email.com",
+  "password": "senha123",
+  "name": "MATHEUS TECNICO",
+  "profilePhoto": "https://randomuser.me/api/portraits/men/2.jpg",
+  "availability": [
+    "2025-11-03T08:00:00.000Z",
+    "2025-11-03T09:00:00.000Z",
+    "2025-11-03T10:00:00.000Z",
+    "2025-11-04T08:00:00.000Z",
+    "2025-11-04T14:00:00.000Z",
+    "2025-11-05T08:00:00.000Z"
+  ]
+}
+
+### CRIAR - CLIENTE
+POST {{baseUrl}}/clients
+Content-Type: application/json
+
+{
+  "email": "client@email.com",
+  "password": "senha123",
+  "name": "MATHEUS CLIENT",
+  "profilePhoto": "https://randomuser.me/api/portraits/men/3.jpg"
+}
+
+
+
+### LOGIN 
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "email": "admin@email.com",
+  "password": "senha123"
+}
+

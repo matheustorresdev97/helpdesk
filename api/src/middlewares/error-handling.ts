@@ -1,8 +1,14 @@
-import { NextFunction, Request, Response } from 'express';
-import z, { ZodError } from 'zod';
-import { AppError } from '../utils/app-error';
+import { NextFunction, Request, Response } from "express";
+import z, { ZodError } from "zod";
+import { AppError } from "../utils/app-error";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
-export function errorHandling(error: any, request: Request, response: Response, _: NextFunction) {
+export function errorHandling(
+  error: any,
+  request: Request,
+  response: Response,
+  _: NextFunction
+) {
   if (error instanceof AppError) {
     return response.status(error.statusCode).json({ message: error.message });
   }
@@ -10,7 +16,14 @@ export function errorHandling(error: any, request: Request, response: Response, 
   if (error instanceof ZodError) {
     return response
       .status(400)
-      .json({ message: 'validation error', issues: z.treeifyError(error) });
+      .json({ message: "validation error", issues: z.treeifyError(error) });
+  }
+
+  if (
+    error instanceof PrismaClientKnownRequestError &&
+    error.code === "P2002"
+  ) {
+    return response.status(409).json({ message: "Email já está em uso" });
   }
 
   return response.status(500).json({ message: error.message });
