@@ -4,6 +4,7 @@ import {
   createTechnicianSchema,
   updateTechnicianSchema,
 } from "../schemas/technician.schema";
+import { paginationSchema } from "@/schemas/pagination.schema";
 
 const technicianService = new TechnicianService();
 
@@ -35,7 +36,8 @@ export class TechnicianController {
 
   async index(request: Request, response: Response) {
     try {
-      const technicians = await technicianService.index();
+      const { page, perPage } = paginationSchema.parse(request.query);
+      const technicians = await technicianService.index(page, perPage);
 
       return response.json(technicians);
     } catch (error) {
