@@ -1,11 +1,11 @@
 import { AxiosError } from "axios";
 import { useActionState } from "react";
 import z, { ZodError } from "zod";
-import circleAlertSvg from "../assets/icons/circle-alert.svg";
-import { Button } from "../components/Button";
-import { Input } from "../components/Input";
-import { useAuth } from "../hooks/useAuth";
-import { api } from "../services/api";
+import circleAlertSvg from "../../assets/icons/circle-alert.svg";
+import { Button } from "../../components/Button";
+import { Input } from "../../components/Input";
+import { useAuth } from "../../hooks/useAuth";
+import { api } from "../../services/api";
 import { useNavigate } from "react-router";
 
 const signInSchema = z.object({

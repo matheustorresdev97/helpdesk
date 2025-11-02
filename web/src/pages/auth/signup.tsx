@@ -2,10 +2,10 @@ import { AxiosError } from "axios";
 import { useActionState } from "react";
 import { useNavigate } from "react-router";
 import z, { ZodError } from "zod";
-import circleAlertSvg from "../assets/icons/circle-alert.svg";
-import { Button } from "../components/Button";
-import { Input } from "../components/Input";
-import { api } from "../services/api";
+import circleAlertSvg from "../../assets/icons/circle-alert.svg";
+import { Button } from "../../components/Button";
+import { Input } from "../../components/Input";
+import { api } from "../../services/api";
 
 const signUpSchema = z.object({
   name: z.string().trim().min(2, { message: "Informe um nome válido" }),
