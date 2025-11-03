@@ -3,11 +3,12 @@ import { useActionState, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import z, { ZodError } from "zod";
 import { api } from "../services/api";
-import { generateTimes } from "../utils/generate-time";
+import { defaultAvailability, generateTimes } from "../utils/generate-time";
 import { getInitials } from "../utils/get-name-initials";
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 import { TimeButton } from "../components/TimeButton";
+
 
 const morning = generateTimes(7, 12);
 const afternoon = generateTimes(13, 18);
@@ -41,7 +42,9 @@ export function TechnicianForm() {
   const [email, setEmail] = useState(technician?.email ?? "");
   const [password, setPassword] = useState("");
   const [availability, setAvailability] = useState<string[]>(
-    technician?.availability?.map((iso) => iso.slice(11, 16)) ?? []
+    technician
+      ? technician.availability.map((iso) => iso.slice(11, 16))
+      : defaultAvailability
   );
   const [error, setError] = useState<string | null>(null);
 
@@ -209,7 +212,6 @@ export function TechnicianForm() {
           </div>
 
           <div className="grow flex flex-col gap-4">
-            {/* Manhã */}
             <div>
               <h2 className="text-gray-300 text-xs font-bold font-lato mb-2 uppercase">
                 Manhã
@@ -226,6 +228,7 @@ export function TechnicianForm() {
               </div>
             </div>
 
+            {/* Tarde */}
             <div>
               <h2 className="text-gray-300 text-xs font-bold font-lato mb-2 uppercase">
                 Tarde
@@ -242,6 +245,7 @@ export function TechnicianForm() {
               </div>
             </div>
 
+            {/* Noite */}
             <div>
               <h2 className="text-gray-300 text-xs font-bold font-lato mb-2 uppercase">
                 Noite
