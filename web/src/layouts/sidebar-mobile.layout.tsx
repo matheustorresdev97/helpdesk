@@ -37,7 +37,7 @@ export function SidebarMobileLayout() {
 
         {session?.user.role === "CLIENT" && (
           <NavLink
-            to={"/tickets"}
+           to={"/tickets/new"}
             className={({ isActive }) =>
               `flex items-center gap-3 h-11 text-gray-400 cursor-pointer px-5
             hover:bg-gray-200 hover:rounded-sm hover:text-gray-600

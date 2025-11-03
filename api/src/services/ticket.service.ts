@@ -6,17 +6,22 @@ import {
 import { getTechnicianWithLessOpenTickets } from "../utils/assign-technician";
 import { normalizeTickets } from "@/utils/normalize-ticket";
 import z from "zod";
+import { AppError } from "@/utils/app-error";
 
 export class TicketService {
-  async create(payload: CreateTicketPayload) {
-    const { title, description, clientId, services } = payload;
+  async create(payload: CreateTicketPayload, user: any) {
+    if (user.role !== "CLIENT") {
+      throw new AppError("Apenas clientes podem criar chamados", 403);
+    }
+
+    const { title, description, services } = payload;
     const technicianId = await getTechnicianWithLessOpenTickets();
 
     const data = await prisma.ticket.create({
       data: {
         title,
         description,
-        client: { connect: { id: clientId } },
+        client: { connect: { id: user.id } },
         technician: { connect: { id: technicianId } },
         services: {
           connect: services.map((serviceId: string) => ({ id: serviceId })),
@@ -55,7 +60,7 @@ export class TicketService {
       orderBy: { createdAt: "asc" },
       include: {
         client: { select: { id: true, name: true } },
-        technician: { select: { id: true, name: true } },
+        technician: { select: { id: true, name: true, email: true } },
         services: { select: { id: true, title: true, value: true } },
       },
     });

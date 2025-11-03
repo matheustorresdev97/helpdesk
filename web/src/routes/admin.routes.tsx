@@ -5,6 +5,7 @@ import { Technician } from "../pages/adm/technician";
 import { Client } from "../pages/adm/client";
 import { Service } from "../pages/adm/service";
 import { TechnicianForm } from "../pages/technician-form";
+import { TicketDetails } from "../pages/ticket-details";
 
 export function AdminRoutes() {
   return (
@@ -15,6 +16,7 @@ export function AdminRoutes() {
         <Route path="/technicians/:mode" element={<TechnicianForm />} />
         <Route path="/clients" element={<Client />} />
         <Route path="/services" element={<Service />} />
+        <Route path="/ticket" element={<TicketDetails />} />
       </Route>
     </Routes>
   );

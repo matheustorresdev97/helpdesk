@@ -67,11 +67,7 @@ export function AppLayout() {
           className="p-3 text-white focus:outline-none bg-gray-200 rounded-md mr-4"
         >
           {isSidebarOpen ? (
-            <img
-              src={CloseSvg}
-              alt="close menu"
-              className="w-5 h-5"
-            />
+            <img src={CloseSvg} alt="close menu" className="w-5 h-5" />
           ) : (
             <img src={MenuSvg} alt="menu" className="w-5 h-5" />
           )}
@@ -108,9 +104,10 @@ export function AppLayout() {
 
       <div
         ref={sidebarRef}
-        className={`fixed left-0 w-[220px] h-[280px] z-50 transform transition-transform duration-300 ease-in-out md:hidden ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        style={{ top: "64px" }}
+        className={`fixed left-0 w-[220px] h-[280px] z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+        style={{ top: "6rem" }}
       >
         <SidebarMobileLayout />
       </div>

@@ -9,8 +9,8 @@ export class TicketController {
   async create(request: Request, response: Response) {
     try {
       const payload = createTicketSchema.parse(request.body);
-      const ticket = await taskService.create(payload);
-
+      const { user } = request;
+      const ticket = await taskService.create(payload, user);
       return response.status(201).json(ticket);
     } catch (error) {
       error;

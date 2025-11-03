@@ -51,7 +51,7 @@ export function SidebarLayout() {
 
           {session?.user.role === "CLIENT" && (
             <NavLink
-              to={"/tickets"}
+              to={"/tickets/new"}
               className={({ isActive }) =>
                 `flex items-center gap-3 min-w-[156px] h-11 text-gray-400 cursor-pointer
               hover:bg-blue-dark hover:rounded-sm hover:text-gray-600
