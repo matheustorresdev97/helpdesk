@@ -57,7 +57,7 @@ export class TicketService {
       where,
       skip,
       take: perPage,
-      orderBy: { createdAt: "asc" },
+      orderBy: { createdAt: "desc" },
       include: {
         client: { select: { id: true, name: true } },
         technician: { select: { id: true, name: true, email: true } },

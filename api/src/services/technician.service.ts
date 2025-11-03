@@ -114,7 +114,7 @@ export class TechnicianService {
       where: whereClause,
       skip,
       take: perPage,
-      orderBy: { createdAt: "asc" },
+      orderBy: { createdAt: "desc" },
       include: { availability: true },
     });
 

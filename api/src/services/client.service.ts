@@ -28,7 +28,7 @@ export class ClientService {
         email,
         password: hashedPassword,
         name,
-        role: Role.CLIENT
+        role: Role.CLIENT,
       },
       select: {
         id: true,
@@ -60,7 +60,7 @@ export class ClientService {
         where: whereClause,
         skip,
         take: perPage,
-        orderBy: { createdAt: "asc" },
+        orderBy: { createdAt: "desc" },
         select: {
           id: true,
           email: true,
