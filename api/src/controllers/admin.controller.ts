@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { createAdminSchema } from "@/schemas/admin.schema";
 import { AdminService } from "@/services/admin.service";
+import { ZodError } from "zod";
 
 const adminService = new AdminService();
 
@@ -13,7 +14,16 @@ export class AdminController {
 
       return response.status(201).json(admin);
     } catch (error) {
-      error;
+      if (error instanceof ZodError) {
+        return response.status(400).json({
+          message: "Erro de validação",
+          errors: error.issues,
+        });
+      }
+
+      return response.status(400).json({
+        message: error instanceof Error ? error.message : "Erro desconhecido",
+      });
     }
   }
 }

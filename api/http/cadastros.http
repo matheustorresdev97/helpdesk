@@ -1,15 +1,15 @@
 @baseUrl = http://localhost:3333
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjIwNDE0MjksImV4cCI6MTc2MjEyNjAyOSwic3ViIjoiZTBkNWU0ZTQtYThmOC00NWY1LTg5YzItNmViNGMwOTYwM2M1In0.ynPKes6k__vxEbz7Rvl68cpWhCLkXXuhsVTgzl7HiKI
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjIxMjc2MDYsImV4cCI6MTc2MjIxMjIwNiwic3ViIjoiMGE1ZWU3ODItZjM5Yi00YTEzLWE2YzQtMWIyYzhiZDA0MzczIn0.914qnwx8dmJctiXuGpdkk9h-icAfI9PXxQ--j0Afrb4
 
 ### CRIAR - ADMIN
 POST {{baseUrl}}/admins
 Content-Type: application/json
 
 {
-  "email": "admin@email.com",
+  "email": "admin1@email.com",
   "password": "senha123",
-  "name": "MATHEUS ADMIN",
-  "profilePhoto": "https://randomuser.me/api/portraits/men/1.jpg"
+  "name": "MATHEUS ADMIN 1",
+  "profilePhoto": ""
 }
 
 
@@ -52,7 +52,7 @@ POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-  "email": "admin@email.com",
+  "email": "admin1@email.com",
   "password": "senha123"
 }
 

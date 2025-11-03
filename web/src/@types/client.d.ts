@@ -1,13 +1,12 @@
-type Technician = {
+type Client = {
   id: string;
   email: string;
   name: string;
   role: string;
-  availability: string[];
 };
 
-type TechnicianAPIResponse = {
-  technicians: Technician[];
+type ClientAPIResponse = {
+  clients: Client[];
   pagination: {
     page: number;
     perPage: number;
@@ -16,10 +15,9 @@ type TechnicianAPIResponse = {
   };
 };
 
-type TechnicianAPIRequest = {
+type ClientAPIRequest = {
   id?: string;
   email: string;
   name: string;
   profilePhoto?: string;
-  availability: string[];
 };

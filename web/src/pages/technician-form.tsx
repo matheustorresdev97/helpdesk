@@ -226,7 +226,6 @@ export function TechnicianForm() {
               </div>
             </div>
 
-            {/* Tarde */}
             <div>
               <h2 className="text-gray-300 text-xs font-bold font-lato mb-2 uppercase">
                 Tarde
@@ -243,7 +242,6 @@ export function TechnicianForm() {
               </div>
             </div>
 
-            {/* Noite */}
             <div>
               <h2 className="text-gray-300 text-xs font-bold font-lato mb-2 uppercase">
                 Noite

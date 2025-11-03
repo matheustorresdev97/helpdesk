@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { TicketController } from "../controller/ticket.controller";
+import { TicketController } from "../controllers/ticket.controller";
 import { ensureAuthenticated } from "../middlewares/ensure-authenticated";
 import { verifyAuthorization } from "../middlewares/verify-authorization";
 
