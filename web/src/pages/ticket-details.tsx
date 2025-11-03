@@ -1,12 +1,13 @@
-import { useActionState, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
-import { Button } from '../components/Button';
-import { Loading } from '../components/Loading';
-import { TicketStatus } from '../components/TicketStatus';
-import { useAuth } from '../hooks/useAuth';
-import { formatCurrency } from '../utils/format-currency';
-import { formatDate } from '../utils/format-date';
-import { getInitials } from '../utils/get-name-initials';
+import { useActionState, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
+import { Button } from "../components/Button";
+import { Loading } from "../components/Loading";
+import { TicketStatus } from "../components/TicketStatus";
+import { useAuth } from "../hooks/useAuth";
+import { formatCurrency } from "../utils/format-currency";
+import { formatDate } from "../utils/format-date";
+import { getInitials } from "../utils/get-name-initials";
+import { TicketDetailsButton } from "../components/TicketDetailsButton";
 
 export function TicketDetails() {
   const navigate = useNavigate();
@@ -63,16 +64,18 @@ export function TicketDetails() {
               Voltar
             </button>
           </div>
-          <h1 className="text-blue-dark font-lato font-bold text-2xl">Chamado detalhado</h1>
+          <h1 className="text-blue-dark font-lato font-bold text-2xl">
+            Chamado detalhado
+          </h1>
         </div>
 
-        {role === 'ADMIN' && (
+        {role === "ADMIN" && (
           <div className="flex gap-2">
-            {ticket?.status !== 'CLOSED' && (
+            {ticket?.status !== "CLOSED" && (
               <Button
                 variantStyle="light"
                 variantSize="confirmWindow"
-                className="flex items-center justify-center gap-2 text-gray-200"
+                className="flex items-center justify-center gap-2 text-gray-200 cursor-none!"
               >
                 <svg
                   width="18"
@@ -93,11 +96,11 @@ export function TicketDetails() {
               </Button>
             )}
 
-            {ticket?.status === 'CLOSED' && (
+            {ticket?.status === "CLOSED" && (
               <Button
                 variantStyle="light"
                 variantSize="confirmWindow"
-                className="flex items-center justify-center gap-2 text-gray-200"
+                className="flex items-center justify-center gap-2 text-gray-200 cursor-none!"
               >
                 <svg
                   width="18"
@@ -118,39 +121,67 @@ export function TicketDetails() {
             )}
           </div>
         )}
+
+        {role === "TECHNICIAN" && (
+          <TicketDetailsButton status={ticket.status} />
+        )}
       </div>
 
-      <form action={formAction} className="flex flex-col md:flex-row gap-8" id="technician-form">
+      <form
+        action={formAction}
+        className="flex flex-col md:flex-row gap-8"
+        id="technician-form"
+      >
         <div className="w-full md:w-2/3 border border-gray-500 p-6 rounded-lg flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <div className="flex items-center place-content-between ">
               <p className="text-gray-300 font-lato font-bold text-xs">
-                {ticket.id.toString().padStart(5, '0')}
+                {ticket.id.toString().padStart(5, "0")}
               </p>
               <TicketStatus status={ticket.status} />
             </div>
-            <h1 className="text-gray-200 text-base font-lato font-bold">{ticket.title}</h1>
+            <h1 className="text-gray-200 text-base font-lato font-bold">
+              {ticket.title}
+            </h1>
           </div>
           <div>
-            <span className="text-gray-400 font-lato font-bold text-xs">Descrição</span>
-            <p className="text-gray-200 font-lato text-sm">{ticket.description}</p>
+            <span className="text-gray-400 font-lato font-bold text-xs">
+              Descrição
+            </span>
+            <p className="text-gray-200 font-lato text-sm">
+              {ticket.description}
+            </p>
           </div>
           <div>
-            <span className="text-gray-400 font-lato font-bold text-xs">Categoria</span>
-            <p className="text-gray-200 font-lato text-sm">{ticket.services[0].title}</p>
+            <span className="text-gray-400 font-lato font-bold text-xs">
+              Categoria
+            </span>
+            <p className="text-gray-200 font-lato text-sm">
+              {ticket.services[0].title}
+            </p>
           </div>
           <div className="flex gap-12 md:gap-32">
             <div>
-              <span className="text-gray-400 font-lato font-bold text-xs">Criado em</span>
-              <p className="text-gray-200 font-lato text-sm">{formatDate(ticket.createdAt)}</p>
+              <span className="text-gray-400 font-lato font-bold text-xs">
+                Criado em
+              </span>
+              <p className="text-gray-200 font-lato text-sm">
+                {formatDate(ticket.createdAt)}
+              </p>
             </div>
             <div>
-              <span className="text-gray-400 font-lato font-bold text-xs">Atualizado em</span>
-              <p className="text-gray-200 font-lato text-sm">{formatDate(ticket.updatedAt)}</p>
+              <span className="text-gray-400 font-lato font-bold text-xs">
+                Atualizado em
+              </span>
+              <p className="text-gray-200 font-lato text-sm">
+                {formatDate(ticket.updatedAt)}
+              </p>
             </div>
           </div>
           <div>
-            <span className="text-gray-400 font-lato font-bold text-xs">Cliente</span>
+            <span className="text-gray-400 font-lato font-bold text-xs">
+              Cliente
+            </span>
             <div className="flex gap-2 items-center mt-2">
               <span
                 className="bg-blue-dark w-5 h-5 
@@ -177,25 +208,35 @@ export function TicketDetails() {
                 {getInitials(ticket.technician.name)}
               </span>
               <div className="flex flex-col">
-                <span className="text-gray-200 font-lato text-sm">{ticket.technician.name}</span>
+                <span className="text-gray-200 font-lato text-sm">
+                  {ticket.technician.name}
+                </span>
                 <span className="text-gray-400 font-lato font-bold text-xs">
                   {ticket.technician.email}
                 </span>
               </div>
             </div>
             <div className="mb-4">
-              <span className="text-gray-400 font-lato font-bold text-xs">Valores</span>
+              <span className="text-gray-400 font-lato font-bold text-xs">
+                Valores
+              </span>
               <div className="text-gray-200 font-lato text-xs flex place-content-between">
                 <span>Preço base</span>
                 <span>{formatCurrency(ticket.initialCost)}</span>
               </div>
             </div>
             <div className="mb-4">
-              <span className="text-gray-400 font-lato font-bold text-xs">Adicionais</span>
+              <span className="text-gray-400 font-lato font-bold text-xs">
+                Adicionais
+              </span>
               {ticket.services.map((service) => (
-                <div className="flex place-content-between">
-                  <p className="text-gray-200 font-lato text-xs">{service.title}</p>
-                  <p className="text-gray-200 font-lato text-xs">{formatCurrency(service.value)}</p>
+                <div key={service.id} className="flex place-content-between">
+                  <p className="text-gray-200 font-lato text-xs">
+                    {service.title}
+                  </p>
+                  <p className="text-gray-200 font-lato text-xs">
+                    {formatCurrency(service.value)}
+                  </p>
                 </div>
               ))}
             </div>
@@ -207,8 +248,8 @@ export function TicketDetails() {
                     {formatCurrency(
                       ticket.services.reduce(
                         (acc, s) => acc + Number(s.value),
-                        Number(ticket.initialCost),
-                      ),
+                        Number(ticket.initialCost)
+                      )
                     )}
                   </span>
                 </div>
@@ -216,7 +257,11 @@ export function TicketDetails() {
             </div>
           </div>
 
-          {error && <p className="text-feedback-danger mt-4 font-lato text-sm">{error}</p>}
+          {error && (
+            <p className="text-feedback-danger mt-4 font-lato text-sm">
+              {error}
+            </p>
+          )}
         </div>
       </form>
     </div>
