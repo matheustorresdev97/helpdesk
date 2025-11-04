@@ -22,19 +22,6 @@ export class TechnicianController {
     }
   }
 
-  async update(request: Request, response: Response) {
-    try {
-      const { id } = request.params;
-      const payload = updateTechnicianSchema.parse(request.body);
-
-      const technician = await technicianService.update(id, payload);
-
-      return response.json(technician);
-    } catch (error) {
-      error;
-    }
-  }
-
   async index(request: Request, response: Response) {
     try {
       const { page, perPage } = paginationSchema.parse(request.query);

@@ -64,7 +64,7 @@ export function TechnicianForm() {
       technicianSchema.parse(data);
 
       if (technician) {
-        await api.put(`/technicians/${technician.id}`, data);
+        await api.put(`/admin/${technician.id}/technician/`, data);
       } else {
         await api.post("/technicians", data);
       }
@@ -228,7 +228,6 @@ export function TechnicianForm() {
               </div>
             </div>
 
-            {/* Tarde */}
             <div>
               <h2 className="text-gray-300 text-xs font-bold font-lato mb-2 uppercase">
                 Tarde
@@ -245,7 +244,6 @@ export function TechnicianForm() {
               </div>
             </div>
 
-            {/* Noite */}
             <div>
               <h2 className="text-gray-300 text-xs font-bold font-lato mb-2 uppercase">
                 Noite

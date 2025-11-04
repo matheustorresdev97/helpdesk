@@ -2,8 +2,11 @@ import { Request, Response } from "express";
 import { createAdminSchema } from "@/schemas/admin.schema";
 import { AdminService } from "@/services/admin.service";
 import { ZodError } from "zod";
+import { updateTechnicianSchema } from "@/schemas/technician.schema";
+import { TechnicianService } from "@/services/technician.service";
 
 const adminService = new AdminService();
+const technicianService = new TechnicianService();
 
 export class AdminController {
   async create(request: Request, response: Response) {
@@ -26,4 +29,17 @@ export class AdminController {
       });
     }
   }
+
+    async update(request: Request, response: Response) {
+      try {
+        const { id } = request.params;
+        const payload = updateTechnicianSchema.parse(request.body);
+  
+        const technician = await technicianService.update(id, payload);
+  
+        return response.json(technician);
+      } catch (error) {
+        error;
+      }
+    }
 }

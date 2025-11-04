@@ -57,51 +57,6 @@ export class TechnicianService {
     };
   }
 
-  async update(id: string, payload: UpdateTechnicianPayload) {
-    const { email, password, name, profilePhoto, availability } = payload;
-
-    const hashedPassword = password ? await hash(password, 8) : undefined;
-
-    const data = await prisma.user.update({
-      where: { id },
-      data: {
-        name,
-        email,
-        ...(hashedPassword && { password: hashedPassword }),
-        profilePhoto: profilePhoto ?? "",
-        availability: {
-          deleteMany: {},
-          create: availability
-            .sort((a, b) => a.getTime() - b.getTime())
-            .map((time) => ({ time })),
-        },
-      },
-
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        profilePhoto: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
-        availability: {
-          select: {
-            id: true,
-            time: true,
-          },
-        },
-      },
-    });
-
-    const technician = responseTechnicianSchema.parse({
-      ...data,
-      availability: data.availability.map((a) => a.time),
-    });
-
-    return technician;
-  }
-
   async index(page: number, perPage: number) {
     const responseTechnicianArraySchema = z.array(responseTechnicianSchema);
 
