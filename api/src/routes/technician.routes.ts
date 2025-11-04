@@ -21,6 +21,12 @@ technicianRoutes.post(
   technicianController.create
 );
 
+technicianRoutes.put(
+  "/:id",
+  verifyAuthorization(["TECHNICIAN"]),
+  technicianController.update
+);
+
 technicianRoutes.patch(
   "/:id",
   verifyAuthorization(["TECHNICIAN"]),

@@ -3,6 +3,7 @@ import {
   CreateTechnicianPayload,
   responseTechnicianSchema,
   UpdateTechnicianPayload,
+  updateTechnicianSchema,
 } from "../schemas/technician.schema";
 import { prisma } from "../configs/prisma.config";
 import { AppError } from "@/utils/app-error";
@@ -95,6 +96,24 @@ export class TechnicianService {
 
     return { technicians, pagination };
   }
+
+  async update(id: string, payload: UpdateTechnicianPayload) {
+    const { email, name, profilePhoto } = payload;
+
+    const data = await prisma.user.update({
+      where: { id },
+      data: {
+        profilePhoto: profilePhoto ?? null,
+        name,
+        email,
+      },
+    });
+
+    const technician = updateTechnicianSchema.parse(data);
+
+    return technician;
+  }
+
 
   async updatePassword(id: string, payload: UpdatePasswordPayload) {
     const user = await prisma.user.findUnique({

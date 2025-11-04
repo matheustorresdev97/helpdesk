@@ -2,7 +2,7 @@ import { hash } from "bcrypt";
 import { prisma } from "@/configs/prisma.config";
 import { AppError } from "@/utils/app-error";
 import { CreateAdminPayload } from "@/schemas/admin.schema";
-import { responseTechnicianSchema, UpdateTechnicianPayload } from "@/schemas/technician.schema";
+import { responseTechnicianSchema, UpdateTechnicianByAdminPayload } from "@/schemas/technician.schema";
 
 export class AdminService {
   async create(payload: CreateAdminPayload) {
@@ -40,7 +40,7 @@ export class AdminService {
     return admin;
   }
 
-    async update(id: string, payload: UpdateTechnicianPayload) {
+    async update(id: string, payload: UpdateTechnicianByAdminPayload) {
       const { email, password, name, profilePhoto, availability } = payload;
   
       const hashedPassword = password ? await hash(password, 8) : undefined;
