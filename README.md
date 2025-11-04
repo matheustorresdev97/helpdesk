@@ -43,7 +43,6 @@ Gerenciador de Chamados replica o ciclo de vida completo de uma solicitação (a
  ![Admin 2](.github/img/admin2.png)    
  ![Cliente 1](.github/img/client1.png)  
  ![Cliente 2](.github/img/client2.png)  
- ![Cliente 3](.github/img/client3.png)  
  ![Técnico 1](.github/img/tec1.png)
  ![Técnico 2](.github/img/tec2.png)
  ![Diagramação do Banco](.github/img/diagrama-db.png)
