@@ -5,7 +5,7 @@ export const UserDTO = z.object({
   email: z.string().email(),
   name: z.string(),
   role: z.enum(["ADMIN", "CLIENT", "TECHNICIAN"]),
-  profilePhoto: z.string().optional().nullable()
+  profilePhoto: z.string().nullable().optional()
 });
 
 export const updatePasswordSchema = z.object({

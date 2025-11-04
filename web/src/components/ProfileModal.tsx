@@ -1,7 +1,13 @@
 import { AxiosError } from "axios";
 import { ZodError } from "zod";
 import { api } from "../services/api";
-import { useEffect, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+} from "react";
 import { createPortal } from "react-dom";
 import { useAuth } from "../hooks/useAuth";
 import { Button } from "./Button";
@@ -13,6 +19,8 @@ type ProfileModalProps = {
   isOpen: boolean;
 };
 
+type TFile = File | null;
+
 export function ProfileModal({ onClose, isOpen }: ProfileModalProps) {
   const { session, update } = useAuth();
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
@@ -21,11 +29,16 @@ export function ProfileModal({ onClose, isOpen }: ProfileModalProps) {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [technician, setTechnician] = useState<Technician>();
+  const [newProfilePhotoFile, setNewProfilePhotoFile] = useState<TFile>(null);
+  const [isPhotoRemoved, setIsPhotoRemoved] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const UPLOAD_BASE_URL = `${api.defaults.baseURL}/uploads`;
 
   useEffect(() => {
     if (isOpen && session) {
       setName(session.user.name || "");
       setEmail(session.user.email || "");
+      setIsPhotoRemoved(false);
       setError("");
       loadTechnician();
     }
@@ -42,6 +55,28 @@ export function ProfileModal({ onClose, isOpen }: ProfileModalProps) {
     setIsChangePasswordOpen((prev) => !prev);
   };
 
+  const handleButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setNewProfilePhotoFile(event.target.files[0]);
+      setIsPhotoRemoved(false);
+    } else {
+      setNewProfilePhotoFile(null);
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    setNewProfilePhotoFile(null);
+    setIsPhotoRemoved(true);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   async function handleUpdateData(event: FormEvent) {
     event.preventDefault();
     setError("");
@@ -51,29 +86,50 @@ export function ProfileModal({ onClose, isOpen }: ProfileModalProps) {
     }
 
     setIsLoading(true);
-
     const id = session.user.id;
+    let photoPayload: string | null | undefined = undefined;
 
-    const data = {
-      name,
-      email,
-    };
-
-    let response;
     try {
-      if (session.user.role === "CLIENT") {
-        response = await api.put(`/clients/${id}`, data);
+      // Upload PHOTO
+      if (newProfilePhotoFile) {
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", newProfilePhotoFile);
+
+        const uploadResponse = await api.post("/uploads", uploadFormData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        photoPayload = uploadResponse.data.filename;
+      } else if (isPhotoRemoved) {
+        photoPayload = null;
       }
 
-      if (session.user.role === "TECHNICIAN") {
-        response = await api.put(`/technicians/${id}`, data);
+      let photoToUpdateSession: string | null =
+        session?.user.profilePhoto ?? null;
+
+      if (photoPayload !== undefined) {
+        photoToUpdateSession = photoPayload;
       }
+
+      const dataToUpdate = {
+        name,
+        email,
+        profilePhoto: photoPayload,
+      };
+
+      const endpoint =
+        session.user.role === "CLIENT"
+          ? `/clients/${id}`
+          : `/technicians/${id}`;
+
+      const response = await api.put(endpoint, dataToUpdate);
 
       update({
         ...session,
         user: {
           ...session.user,
           ...response?.data,
+          profilePhoto: photoToUpdateSession,
         },
       });
 
@@ -91,6 +147,12 @@ export function ProfileModal({ onClose, isOpen }: ProfileModalProps) {
     }
   }
 
+  const ProfilePhotoSrc =
+    (newProfilePhotoFile && URL.createObjectURL(newProfilePhotoFile)) ||
+    (session?.user.profilePhoto && !isPhotoRemoved
+      ? `${UPLOAD_BASE_URL}/${session.user.profilePhoto}`
+      : undefined);
+
   if (!isOpen) return null;
 
   return createPortal(
@@ -104,7 +166,6 @@ export function ProfileModal({ onClose, isOpen }: ProfileModalProps) {
       >
         {!isChangePasswordOpen ? (
           <>
-            {/* HEADER */}
             <div className="flex items-center justify-between mb-6">
               <span className="font-bold font-lato text-base">Perfil</span>
               <svg
@@ -129,19 +190,29 @@ export function ProfileModal({ onClose, isOpen }: ProfileModalProps) {
 
             <form onSubmit={handleUpdateData}>
               <div className="flex items-center mb-5">
-                {session?.user.profilePhoto ? (
+                {/* PROFILE PHOTO */}
+                {(newProfilePhotoFile &&
+                  URL.createObjectURL(newProfilePhotoFile)) ||
+                (session?.user.profilePhoto && !isPhotoRemoved) ? (
                   <img
-                    src={session.user.profilePhoto}
+                    src={ProfilePhotoSrc}
                     alt="Profile"
-                    className="w-12 h-12 rounded-full"
+                    className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
                   <div className="w-12 h-12 bg-blue-light rounded-full"></div>
                 )}
-
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
                 <div className="text-gray-200 bg-gray-500 flex items-center p-2 rounded-md gap-2 mx-3">
                   <button
                     type="button"
+                    onClick={handleButtonClick}
                     className="font-lato font-bold text-xs cursor-pointer flex items-center gap-2"
                   >
                     <svg
@@ -164,6 +235,7 @@ export function ProfileModal({ onClose, isOpen }: ProfileModalProps) {
 
                 <button
                   type="button"
+                  onClick={handleRemovePhoto}
                   className="text-feedback-danger p-[9px] rounded-md bg-gray-500 flex items-center cursor-pointer"
                 >
                   <svg

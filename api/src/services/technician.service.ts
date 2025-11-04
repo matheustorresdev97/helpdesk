@@ -10,6 +10,7 @@ import { AppError } from "@/utils/app-error";
 import z from "zod";
 import { Role } from "@prisma/client";
 import { UpdatePasswordPayload } from "@/schemas/user.schema";
+import { handlePhotoUpdateAndCleanup } from "@/utils/photo-manager";
 
 export class TechnicianService {
   async create(payload: CreateTechnicianPayload) {
@@ -99,17 +100,17 @@ export class TechnicianService {
 
   async show(id: string) {
 
-  const data = await prisma.user.findFirst({
-    where: {
-      id,
-      role: Role.TECHNICIAN,
-    },
-    include: {
-      availability: {
-        select: { time: true },
+    const data = await prisma.user.findFirst({
+      where: {
+        id,
+        role: Role.TECHNICIAN,
       },
-    },
-  });
+      include: {
+        availability: {
+          select: { time: true },
+        },
+      },
+    });
     if (!data) {
       throw new AppError("Tecnico não localizado", 404);
     }
@@ -127,10 +128,23 @@ export class TechnicianService {
   async update(id: string, payload: UpdateTechnicianPayload) {
     const { email, name, profilePhoto } = payload;
 
+    const existingClient = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!existingClient) {
+      throw new AppError("Técnico não localizado", 404);
+    }
+
+    const newProfilePhotoFileName = await handlePhotoUpdateAndCleanup(
+      existingClient.profilePhoto,
+      profilePhoto
+    );
+
     const data = await prisma.user.update({
       where: { id },
       data: {
-        profilePhoto: profilePhoto ?? null,
+        profilePhoto: newProfilePhotoFileName,
         name,
         email,
       },
