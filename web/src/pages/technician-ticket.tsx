@@ -1,31 +1,47 @@
-import { useNavigate } from 'react-router';
-import { formatCurrency } from '../utils/format-currency';
-import { formatDate } from '../utils/format-date';
-import { getInitials } from '../utils/get-name-initials';
-import { TicketStatus } from '../components/TicketStatus';
-import { TicketButton } from '../components/TicektButton';
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { formatCurrency } from "../utils/format-currency";
+import { formatDate } from "../utils/format-date";
+import { getInitials } from "../utils/get-name-initials";
+import { TicketButton } from "../components/TicketButton";
+import { TicketStatus } from "../components/TicketStatus";
+
 
 type Props = {
   ticket: Ticket;
+  handleUpdated: () => void;
 };
 
-export function TechnicianTicket({ ticket }: Props) {
+export function TechnicianTicket({ ticket, handleUpdated }: Props) {
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
+
+  function handleTicketUpdateError(message: string) {
+    setError(message);
+
+    setTimeout(() => {
+      setError(null);
+    }, 5000);
+  }
 
   return (
-    <div className="w-full max-w-[346px] h-auto p-5 border rounded-lg border-gray-500 ">
+    <div className="w-[336px] h-auto p-5 border rounded-lg border-gray-500 ">
       <div className="flex place-content-between">
         <div className="flex flex-col mb-4">
           <span className="font-lato font-bold text-xs text-gray-400">
-            {ticket.id.toString().padStart(5, '0')}
+            {ticket.id.toString().padStart(5, "0")}
           </span>
-          <span className="font-lato font-bold text-base text-gray-100">{ticket.title}</span>
-          <span className="font-lato text-xs text-gray-200">{ticket.description}</span>
+          <span className="font-lato font-bold text-base text-gray-100">
+            {ticket.title}
+          </span>
+          <span className="font-lato text-xs text-gray-200">
+            {ticket.description}
+          </span>
         </div>
         <div>
           <div className="flex items-center gap-1">
             <button
-              onClick={() => navigate('/ticket', { state: ticket })}
+              onClick={() => navigate("/ticket", { state: ticket })}
               className="bg-gray-500 p-2 rounded-md cursor-pointer hover:text-gray-600 hover:bg-blue-dark"
             >
               <svg
@@ -43,7 +59,12 @@ export function TechnicianTicket({ ticket }: Props) {
                 />
               </svg>
             </button>
-            <TicketButton status={ticket.status} />
+            <TicketButton
+              status={ticket.status}
+              ticketId={ticket.id}
+              handleError={handleTicketUpdateError}
+              handleUpdated={handleUpdated}
+            />
           </div>
         </div>
       </div>
@@ -52,7 +73,10 @@ export function TechnicianTicket({ ticket }: Props) {
         <span>{formatDate(ticket.createdAt)}</span>
         <span className="font-bold">
           {formatCurrency(
-            ticket.services.reduce((acc, s) => acc + Number(s.value), Number(ticket.initialCost)),
+            ticket.services.reduce(
+              (acc, s) => acc + Number(s.value),
+              Number(ticket.initialCost)
+            )
           )}
         </span>
       </div>
@@ -72,6 +96,11 @@ export function TechnicianTicket({ ticket }: Props) {
         </div>
         <TicketStatus status={ticket.status} isHidden={true} />
       </div>
+      {error && (
+        <p className="font-lato font-bold text-sm text-feedback-danger shake">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

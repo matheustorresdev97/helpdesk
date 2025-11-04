@@ -1,6 +1,5 @@
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-
 import { TicketStatus } from "../components/TicketStatus";
 import { api } from "../services/api";
 import { TechnicianTicket } from "./technician-ticket";
@@ -22,6 +21,10 @@ export function TechnicianDashboard() {
     }
   }
 
+  function handleUpdated() {
+    fetchTickets();
+  }
+
   useEffect(() => {
     fetchTickets();
   }, []);
@@ -38,29 +41,47 @@ export function TechnicianDashboard() {
 
       <div className="flex flex-col gap-4 mb-6">
         <TicketStatus status="PROCESSING" />
-        {tickets
-          .filter((ticket) => ticket.status === "PROCESSING")
-          .map((ticket) => (
-            <TechnicianTicket key={ticket.id} ticket={ticket} />
-          ))}
+        <div className="flex gap-4 flex-wrap">
+          {tickets
+            .filter((ticket) => ticket.status === "PROCESSING")
+            .map((ticket) => (
+              <TechnicianTicket
+                key={ticket.id}
+                ticket={ticket}
+                handleUpdated={handleUpdated}
+              />
+            ))}
+        </div>
       </div>
 
       <div className="flex flex-col gap-4 mb-6">
         <TicketStatus status="OPEN" />
-        {tickets
-          .filter((ticket) => ticket.status === "OPEN")
-          .map((ticket) => (
-            <TechnicianTicket key={ticket.id} ticket={ticket} />
-          ))}
+        <div className="flex gap-4 flex-wrap">
+          {tickets
+            .filter((ticket) => ticket.status === "OPEN")
+            .map((ticket) => (
+              <TechnicianTicket
+                key={ticket.id}
+                ticket={ticket}
+                handleUpdated={handleUpdated}
+              />
+            ))}
+        </div>
       </div>
 
       <div className="flex flex-col gap-4 mb-6">
         <TicketStatus status="CLOSED" />
-        {tickets
-          .filter((ticket) => ticket.status === "CLOSED")
-          .map((ticket) => (
-            <TechnicianTicket key={ticket.id} ticket={ticket} />
-          ))}
+        <div className="flex gap-4 flex-wrap">
+          {tickets
+            .filter((ticket) => ticket.status === "CLOSED")
+            .map((ticket) => (
+              <TechnicianTicket
+                key={ticket.id}
+                ticket={ticket}
+                handleUpdated={handleUpdated}
+              />
+            ))}
+        </div>
       </div>
     </>
   );

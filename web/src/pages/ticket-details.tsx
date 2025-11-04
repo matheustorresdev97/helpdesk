@@ -33,6 +33,14 @@ export function TicketDetails() {
     return () => clearTimeout(timerId);
   }, [ticket]);
 
+  function handleTicketUpdateError(message: string) {
+    setError(message);
+
+    setTimeout(() => {
+      setError(null);
+    }, 5000);
+  }
+
   if (!ticket) {
     return <Loading />;
   }
@@ -75,7 +83,7 @@ export function TicketDetails() {
               <Button
                 variantStyle="light"
                 variantSize="confirmWindow"
-                className="flex items-center justify-center gap-2 text-gray-200 cursor-none!"
+                className="flex items-center justify-center gap-2 text-gray-200 cursor-none"
               >
                 <svg
                   width="18"
@@ -100,7 +108,7 @@ export function TicketDetails() {
               <Button
                 variantStyle="light"
                 variantSize="confirmWindow"
-                className="flex items-center justify-center gap-2 text-gray-200 cursor-none!"
+                className="flex items-center justify-center gap-2 text-gray-200 cursor-none"
               >
                 <svg
                   width="18"
@@ -121,9 +129,11 @@ export function TicketDetails() {
             )}
           </div>
         )}
-
         {role === "TECHNICIAN" && (
-          <TicketDetailsButton status={ticket.status} />
+          <TicketDetailsButton
+            ticket={ticket}
+            handleError={handleTicketUpdateError}
+          />
         )}
       </div>
 

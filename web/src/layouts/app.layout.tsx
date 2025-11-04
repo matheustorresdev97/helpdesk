@@ -67,7 +67,11 @@ export function AppLayout() {
           className="p-3 text-white focus:outline-none bg-gray-200 rounded-md mr-4"
         >
           {isSidebarOpen ? (
-            <img src={CloseSvg} alt="close menu" className="w-5 h-5" />
+            <img
+              src={CloseSvg}
+              alt="close menu"
+              className="w-5 h-5"
+            />
           ) : (
             <img src={MenuSvg} alt="menu" className="w-5 h-5" />
           )}
@@ -109,7 +113,7 @@ export function AppLayout() {
         }`}
         style={{ top: "6rem" }}
       >
-        <SidebarMobileLayout />
+        <SidebarMobileLayout onClose={() => setIsSidebarOpen(false)} />
       </div>
       <div className="md:ml-[200px] grow">
         <MainLayout />
