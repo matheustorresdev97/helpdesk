@@ -5,6 +5,7 @@ import {
   updateTechnicianSchema,
 } from "../schemas/technician.schema";
 import { paginationSchema } from "@/schemas/pagination.schema";
+import { updatePasswordSchema } from "@/schemas/user.schema";
 
 const technicianService = new TechnicianService();
 
@@ -40,6 +41,18 @@ export class TechnicianController {
       const technicians = await technicianService.index(page, perPage);
 
       return response.json(technicians);
+    } catch (error) {
+      error;
+    }
+  }
+
+  async updatePassword(request: Request, response: Response) {
+    try {
+      const payload = updatePasswordSchema.parse(request.body);
+      const { id } = request.params;
+      await technicianService.updatePassword(id, payload);
+
+      return response.end();
     } catch (error) {
       error;
     }

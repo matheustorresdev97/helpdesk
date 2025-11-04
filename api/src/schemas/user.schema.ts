@@ -7,3 +7,10 @@ export const UserDTO = z.object({
   role: z.enum(["ADMIN", "CLIENT", "TECHNICIAN"]),
   profilePhoto: z.string().optional().nullable()
 });
+
+export const updatePasswordSchema = z.object({
+  password: z.string(),
+  newPassword: z.string(),
+});
+
+export type UpdatePasswordPayload = z.infer<typeof updatePasswordSchema>;

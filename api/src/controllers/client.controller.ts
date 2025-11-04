@@ -5,6 +5,7 @@ import {
   updateClientSchema,
 } from "@/schemas/client.schema";
 import { paginationSchema } from "@/schemas/pagination.schema";
+import { updatePasswordSchema } from "@/schemas/user.schema";
 
 const clientService = new ClientService();
 
@@ -60,7 +61,19 @@ export class ClientController {
       const { id } = request.params;
       await clientService.delete(id);
 
-      return response.sendStatus(204);
+      return response.status(204).end();
+    } catch (error) {
+      error;
+    }
+  }
+
+  async updatePassword(request: Request, response: Response) {
+    try {
+      const payload = updatePasswordSchema.parse(request.body);
+      const { id } = request.params;
+      await clientService.updatePassword(id, payload);
+
+      return response.end();
     } catch (error) {
       error;
     }

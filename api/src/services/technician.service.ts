@@ -1,4 +1,4 @@
-import { hash } from "bcrypt";
+import { compare, hash } from "bcrypt";
 import {
   CreateTechnicianPayload,
   responseTechnicianSchema,
@@ -8,6 +8,7 @@ import { prisma } from "../configs/prisma.config";
 import { AppError } from "@/utils/app-error";
 import z from "zod";
 import { Role } from "@prisma/client";
+import { UpdatePasswordPayload } from "@/schemas/user.schema";
 
 export class TechnicianService {
   async create(payload: CreateTechnicianPayload) {
@@ -138,5 +139,33 @@ export class TechnicianService {
     const technicians = responseTechnicianArraySchema.parse(list);
 
     return { technicians, pagination };
+  }
+
+  async updatePassword(id: string, payload: UpdatePasswordPayload) {
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new AppError("Usuario não encontrado", 404);
+    }
+
+    const isOldPasswordValid = await compare(payload.password, user.password);
+    if (!isOldPasswordValid) {
+      throw new AppError("Senha atual incorreta");
+    }
+
+    if (payload.newPassword.length < 6) {
+      throw new AppError("Mínimo de 6 caracteres", 409);
+    }
+
+    const newPassword = await hash(payload.newPassword, 8);
+
+    await prisma.user.update({
+      where: { id },
+      data: { password: newPassword },
+    });
+
+    return;
   }
 }

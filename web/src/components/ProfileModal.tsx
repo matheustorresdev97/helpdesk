@@ -29,6 +29,10 @@ export function ProfileModal({ onClose, isOpen }: ProfileModalProps) {
     }
   }, [isOpen, session]);
 
+  const handleToggleChangePassword = () => {
+    setIsChangePasswordOpen((prev) => !prev);
+  };
+
   async function handleUpdateData(event: FormEvent) {
     event.preventDefault();
     setError("");
@@ -210,7 +214,9 @@ export function ProfileModal({ onClose, isOpen }: ProfileModalProps) {
           </>
         ) : (
           <ChangePasswordContent
-            onBack={() => setIsChangePasswordOpen(false)}
+            onBack={handleToggleChangePassword}
+            id={session?.user.id}
+            role={session?.user.role}
           />
         )}
       </div>
