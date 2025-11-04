@@ -6,9 +6,11 @@ import { Input } from "./Input";
 
 type Props = {
   service?: Service;
+  ticket?: Ticket;
   isOpen: boolean;
   isAddService: boolean;
   onClose: () => void;
+  onServiceAdded?: (ticket: Ticket) => void;
 };
 
 export function ServiceModal({
@@ -16,6 +18,8 @@ export function ServiceModal({
   isOpen,
   isAddService,
   onClose,
+  onServiceAdded,
+  ticket,
 }: Props) {
   const [title, setTitle] = useState("");
   const [value, setValue] = useState("");
@@ -51,6 +55,17 @@ export function ServiceModal({
 
       if (!isAddService && service) {
         await api.put(`/services/${service.id}`, data);
+      } else if (!isAddService && ticket) {
+        const response = await api.post("/services", data);
+        const serviceId = response.data.id;
+        const updatedTicket = await api.patch(
+          `/tickets/${ticket.id}/services`,
+          { serviceId }
+        );
+
+        if (onServiceAdded) {
+          onServiceAdded(updatedTicket.data);
+        }
       } else {
         await api.post("/services", data);
       }
@@ -62,7 +77,7 @@ export function ServiceModal({
       if (error instanceof AxiosError) {
         setError(
           error.response?.data?.issues?.properties.title.errors[0] ||
-            "Ocorreu um erro ao salvar o serviço."
+          "Ocorreu um erro ao salvar o serviço."
         );
       } else {
         setError("Ocorreu um erro inesperado.");

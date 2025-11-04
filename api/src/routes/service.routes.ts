@@ -11,7 +11,7 @@ serviceRoutes.use(ensureAuthenticated);
 serviceRoutes.get("/", serviceController.index);
 serviceRoutes.post(
   "/",
-  verifyAuthorization(["ADMIN"]),
+   verifyAuthorization(["ADMIN", "TECHNICIAN"]),
   serviceController.create
 );
 serviceRoutes.put(

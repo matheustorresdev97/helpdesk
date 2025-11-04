@@ -46,4 +46,18 @@ export class TicketController {
     }
 
   }
+
+  async updateServices(request: Request, response: Response) {
+    try {
+      const idSchema = z.coerce.number({ message: "Id de chamado inválido" });
+      const id = idSchema.parse(request.params.id);
+
+      const { serviceId } = request.body;
+      const ticket = await ticketService.updateServices(id, serviceId);
+
+      return response.json(ticket);
+    } catch (error) {
+      error;
+    }
+  }
 }

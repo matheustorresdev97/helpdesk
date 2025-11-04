@@ -12,8 +12,14 @@ export function AdminDashboardButton({
   variantSize = "default",
   ...rest
 }: Props) {
-  const baseClasses =
+  // classename separados para legibilidade
+  let baseClasses =
     "bg-gray-200 text-gray-600 rounded-sm font-lato text-sm disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1 h-[40px] w-[40px] md:h-[40px] md:w-[92px]";
+
+  if (variantSize === "mobile") {
+    baseClasses =
+      "bg-gray-200 text-gray-600 rounded-sm font-lato text-sm disabled:opacity-50 cursor-pointer flex items-center justify-center h-[28px] w-[28px]";
+  }
 
   return (
     <button
