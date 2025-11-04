@@ -33,6 +33,18 @@ export class TechnicianController {
     }
   }
 
+
+  async show(request: Request, response: Response) {
+    try {
+      const { id } = request.params;
+      const technician = await technicianService.show(id);
+
+      return response.json(technician);
+    } catch (error) {
+      error;
+    }
+  }
+
   async update(request: Request, response: Response) {
     try {
       const payload = updateTechnicianSchema.parse(request.body);

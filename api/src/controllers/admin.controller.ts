@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { createAdminSchema } from "@/schemas/admin.schema";
 import { AdminService } from "@/services/admin.service";
 import { ZodError } from "zod";
-import { updateTechnicianSchema } from "@/schemas/technician.schema";
+import { updateTechnicianByAdminSchema } from "@/schemas/technician.schema";
 import { TechnicianService } from "@/services/technician.service";
 
 const adminService = new AdminService();
@@ -33,8 +33,8 @@ export class AdminController {
     async update(request: Request, response: Response) {
       try {
         const { id } = request.params;
-        const payload = updateTechnicianSchema.parse(request.body);
-  
+        const payload = updateTechnicianByAdminSchema.parse(request.body);
+
         const technician = await technicianService.update(id, payload);
   
         return response.json(technician);

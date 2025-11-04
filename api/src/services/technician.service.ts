@@ -97,6 +97,33 @@ export class TechnicianService {
     return { technicians, pagination };
   }
 
+  async show(id: string) {
+
+  const data = await prisma.user.findFirst({
+    where: {
+      id,
+      role: Role.TECHNICIAN,
+    },
+    include: {
+      availability: {
+        select: { time: true },
+      },
+    },
+  });
+    if (!data) {
+      throw new AppError("Tecnico não localizado", 404);
+    }
+
+    const technicianMapped = {
+      ...data,
+      availability: data.availability.map((a) => a.time),
+    };
+
+    const technician = responseTechnicianSchema.parse(technicianMapped);
+
+    return technician;
+  }
+
   async update(id: string, payload: UpdateTechnicianPayload) {
     const { email, name, profilePhoto } = payload;
 
