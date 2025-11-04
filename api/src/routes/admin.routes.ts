@@ -6,10 +6,9 @@ import { verifyAuthorization } from "@/middlewares/verify-authorization";
 const adminRoutes = Router();
 const adminController = new AdminController();
 
-adminRoutes.use(ensureAuthenticated);
-
-
 adminRoutes.post("/", adminController.create);
+
+adminRoutes.use(ensureAuthenticated);
 
 adminRoutes.put(
   "/:id/technician",

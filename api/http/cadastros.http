@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3333
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjIxMjc2MDYsImV4cCI6MTc2MjIxMjIwNiwic3ViIjoiMGE1ZWU3ODItZjM5Yi00YTEzLWE2YzQtMWIyYzhiZDA0MzczIn0.914qnwx8dmJctiXuGpdkk9h-icAfI9PXxQ--j0Afrb4
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjIyNzc5MjMsImV4cCI6MTc2MjM2MjUyMywic3ViIjoiOGE1ZWIyODEtMjMzZi00NDcyLTkwY2UtOGNiOTIyMDgyNWM0In0.Hz6-D56NCGri4Fx4TUAjAk5sfonfSnbGsbwc55ub3fA
 
 ### CRIAR - ADMIN
 POST {{baseUrl}}/admins

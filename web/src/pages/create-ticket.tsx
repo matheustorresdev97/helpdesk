@@ -6,7 +6,7 @@ import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 import { api } from "../services/api";
 
- const createTicketSchema = z.object({
+const createTicketSchema = z.object({
   title: z.string().min(3, "Título deve ter pelo menos 3 caracteres"),
   description: z.string().min(5, "Descrição deve ter pelo menos 5 caracteres"),
   services: z
@@ -58,8 +58,10 @@ export function CreateTicket() {
     const data = {
       title,
       description,
-      services: [selectedService?.id],
+      services: [selectedServiceId],
     };
+
+
 
     try {
       const payload = createTicketSchema.parse(data);
@@ -71,10 +73,11 @@ export function CreateTicket() {
       setDescription("");
       setSelectedServiceId("");
     } catch (error) {
+
       if (error instanceof ZodError) {
         setError(error.issues[0].message);
       } else if (error instanceof AxiosError) {
-        setError(error.response?.data.message);
+        setError(error.response?.data.message || "Erro ao criar o chamado");
       } else {
         setError("Erro ao criar o chamado. Tente novamente.");
       }
@@ -147,9 +150,8 @@ export function CreateTicket() {
             required
             id="service-select"
             name="service-select"
-            className={`border-b border-gray-500 pb-4 font-lato text-base focus:outline-none ${
-              selectedServiceId === "" ? "text-gray-400" : "text-gray-200"
-            }`}
+            className={`border-b border-gray-500 pb-4 font-lato text-base focus:outline-none ${selectedServiceId === "" ? "text-gray-400" : "text-gray-200"
+              }`}
             value={selectedServiceId}
             onChange={handleServiceChange}
             onFocus={() => setFocusService(true)}

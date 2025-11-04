@@ -30,16 +30,18 @@ export class AdminController {
     }
   }
 
-    async update(request: Request, response: Response) {
-      try {
-        const { id } = request.params;
-        const payload = updateTechnicianByAdminSchema.parse(request.body);
+async update(request: Request, response: Response) {
+    try {
+      const { id } = request.params;
+      const payload = updateTechnicianByAdminSchema.parse(request.body);
 
-        const technician = await technicianService.update(id, payload);
-  
-        return response.json(technician);
-      } catch (error) {
-        error;
-      }
+      const technician = await adminService.update(id, payload);
+
+      return response.json(technician);
+    } catch (error) {
+      return response.status(400).json({
+        message: error instanceof Error ? error.message : "Erro desconhecido",
+      });
     }
+  }
 }

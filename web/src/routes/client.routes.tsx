@@ -5,14 +5,15 @@ import { CreateTicket } from "../pages/create-ticket";
 import { NotFound } from "../pages/not-found";
 import { TicketDetails } from "../pages/ticket-details";
 
-
 export function ClientRoutes() {
   return (
     <Routes>
       <Route path="/" element={<AppLayout />}>
-        <Route index path="/" element={<Ticket />} />
-            <Route path="/ticket/new" element={<CreateTicket />} />
-        <Route path="/ticket" element={<TicketDetails />} />
+        <Route index element={<Ticket />} />
+        
+        <Route path="tickets/new" element={<CreateTicket />} />
+        
+        <Route path="ticket/:id" element={<TicketDetails />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

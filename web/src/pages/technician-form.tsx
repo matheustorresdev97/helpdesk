@@ -64,7 +64,7 @@ export function TechnicianForm() {
       technicianSchema.parse(data);
 
       if (technician) {
-        await api.put(`/admin/${technician.id}/technician/`, data);
+        await api.put(`/admins/${technician.id}/technician/`, data);
       } else {
         await api.post("/technicians", data);
       }
@@ -86,8 +86,8 @@ export function TechnicianForm() {
     setAvailability(
       (prev) =>
         prev.includes(time)
-          ? prev.filter((t) => t !== time) // desmarca
-          : [...prev, time] // marca
+          ? prev.filter((t) => t !== time) 
+          : [...prev, time] 
     );
   };
 
