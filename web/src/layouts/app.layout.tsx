@@ -10,10 +10,15 @@ import CloseSvg from "../assets/icons/x.svg";
 import LogoIconSvg from "../assets/img/Logo_IconLight.svg";
 import { SidebarMobileLayout } from "./sidebar-mobile.layout";
 import { ProfileMenu } from "../components/ProfileMenu";
+import { ProfileModal } from "../components/ProfileModal";
+
 
 export function AppLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const openProfileModal = () => setIsProfileModalOpen(true);
+  const closeProfileModal = () => setIsProfileModalOpen(false);
 
   const { session } = useAuth();
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -57,7 +62,7 @@ export function AppLayout() {
   return (
     <div className="flex flex-col md:flex-row w-full min-h-screen bg-gray-100 overflow-x-hidden">
       <div className="hidden md:block fixed h-screen w-[200px]">
-        <SidebarLayout />
+        <SidebarLayout onOpenProfileModal={openProfileModal} />
       </div>
 
       <header className="flex items-center p-4 md:hidden">
@@ -100,6 +105,7 @@ export function AppLayout() {
               <ProfileMenu
                 isOpen={isProfileMenuOpen}
                 onClose={toggleProfileMenu}
+                onOpenModal={openProfileModal}
               />
             </div>
           )}
@@ -113,11 +119,15 @@ export function AppLayout() {
         }`}
         style={{ top: "6rem" }}
       >
-        <SidebarMobileLayout onClose={() => setIsSidebarOpen(false)} />
+        <SidebarMobileLayout
+          onClose={() => setIsSidebarOpen(false)}
+          // onOpenProfileModal={openProfileModal}
+        />
       </div>
       <div className="md:ml-[200px] grow">
         <MainLayout />
       </div>
+      <ProfileModal isOpen={isProfileModalOpen} onClose={closeProfileModal} />
     </div>
   );
 }

@@ -1,18 +1,53 @@
+import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router";
 import LogoIconSvg from "../assets/img/Logo_IconLight.svg";
 import { useAuth } from "../hooks/useAuth";
 import { getInitials } from "../utils/get-name-initials";
 import { translateRole } from "../utils/translate-role";
+import { ProfileMenu } from "../components/ProfileMenu";
 
-export function SidebarLayout() {
+type Props = {
+  onOpenProfileModal: () => void;
+};
+
+export function SidebarLayout({ onOpenProfileModal }: Props) {
   const { session } = useAuth();
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  const openProfileModal = () => setIsProfileModalOpen(true);
+  const closeProfileModal = () => setIsProfileModalOpen(false);
+
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+  const profileButtonRef = useRef<HTMLDivElement>(null);
+
+  const toggleProfileMenu = () => {
+    setIsProfileMenuOpen(!isProfileMenuOpen);
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target as Node) &&
+        profileButtonRef.current &&
+        !profileButtonRef.current.contains(event.target as Node)
+      ) {
+        setIsProfileMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [profileMenuRef, profileButtonRef]);
 
   return (
     <>
       <aside className="flex flex-col h-screen">
         <header>
           <div className="flex gap-3 px-5 py-7 border-b border-gray-200">
-            <img src={LogoIconSvg} alt="logo" className="w-11 h-11 " />
+            <img src={LogoIconSvg} alt="logo" className="w-11 h-11" />
             <div className="mb-6">
               <h1 className="text-gray-600 font-lato text-xl text-bold">
                 HelpDesk
@@ -23,7 +58,7 @@ export function SidebarLayout() {
             </div>
           </div>
         </header>
-        <nav className="flex flex-col items-center justify-center mt-6 gap-1 grow">
+        <nav className="flex flex-col items-center mt-6 gap-1 grow">
           <NavLink
             to="/"
             className={({ isActive }) =>
@@ -147,7 +182,11 @@ export function SidebarLayout() {
             </NavLink>
           )}
         </nav>
-        <footer className="border-t border-gray-200 flex gap-3 mt-auto p-5">
+        <footer
+          className="border-t border-gray-200 flex gap-3 mt-auto p-5 cursor-pointer"
+          ref={profileButtonRef}
+          onClick={toggleProfileMenu}
+        >
           <div
             className="bg-blue-dark w-8 h-8 text-gray-600  
             rounded-2xl flex items-center justify-center"
@@ -162,6 +201,16 @@ export function SidebarLayout() {
               {session?.user.email}
             </p>
           </div>
+
+          {isProfileMenuOpen && (
+            <div ref={profileMenuRef} className="absolute bottom-[60px]">
+              <ProfileMenu
+                isOpen={isProfileMenuOpen}
+                onClose={toggleProfileMenu}
+                onOpenModal={onOpenProfileModal}
+              />
+            </div>
+          )}
         </footer>
       </aside>
     </>
